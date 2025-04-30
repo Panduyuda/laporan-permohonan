@@ -47,8 +47,8 @@
   </div>
 
   <script>
-    // Ganti URL berikut dengan Google Apps Script Web App kamu
-    const scriptURL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+    // URL Web App dari Google Apps Script
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwZp5KxhG0vJOMz9owg-U_3kDBah9r-PqlYhKs8CHTh0UdB0duiAEJSxMUwACzI0aW7/exec';
     const form = document.getElementById('permohonanForm');
 
     form.addEventListener('submit', e => {
@@ -64,10 +64,10 @@
     });
 
     async function loadData() {
-      const sheetURL = 'https://docs.google.com/spreadsheets/d/e/YOUR_SHEET_PUBLIC_CSV/pub?output=csv';
+      const sheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTw6O_5n57sUmmgKBM_nnfQSTvt7bG6mQgtGk6JE7vrNVsB2vco1kWEEOlVFi2UUkrT_RcDwpIOQ04j/pub?gid=0&single=true&output=csv';
       const res = await fetch(sheetURL);
       const text = await res.text();
-      const rows = text.split('\n').slice(1);
+      const rows = text.split('\n').slice(1); // Skip header
       const tbody = document.getElementById('dataTable');
       tbody.innerHTML = '';
       rows.forEach(row => {
