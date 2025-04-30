@@ -5,97 +5,308 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Laporan Permohonan Bank Sampah</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+    .header-gradient {
+      background: linear-gradient(135deg, #2c7744 0%, #5a8f3c 100%);
+    }
+    .btn-primary {
+      background: linear-gradient(to right, #2c7744, #5a8f3c);
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .stat-card {
+      transition: transform 0.3s ease;
+    }
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-900">
-  <div class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4 text-center">Laporan Permohonan Bantuan</h1>
-
-    <!-- Form Input -->
-    <div class="bg-white p-6 rounded shadow-md mb-6">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input type="date" id="tanggal" class="border p-2 rounded w-full" placeholder="dd----yyyy" />
-        <input type="text" id="noSurat" class="border p-2 rounded w-full" placeholder="No Surat" />
-        <input type="text" id="pemohon" class="border p-2 rounded w-full" placeholder="Nama Pemohon/Instansi" />
-        <input type="text" id="alamat" class="border p-2 rounded w-full" placeholder="Alamat" />
-        <input type="text" id="keterangan" class="border p-2 rounded w-full" placeholder="Keterangan Permohonan" />
-        <select id="realisasi" class="border p-2 rounded w-full">
-          <option value="">Status Realisasi</option>
-          <option value="Sudah">Sudah</option>
-          <option value="Belum">Belum</option>
-          <option value="TL">TL</option>
-        </select>
+<body class="bg-gray-50 text-gray-800">
+  <!-- Header with Logos -->
+  <div class="header-gradient py-4 shadow-md">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row items-center justify-between">
+        <div class="flex items-center space-x-4 mb-4 md:mb-0">
+          <div class="flex items-center space-x-2">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Coat_of_arms_of_Sukoharjo_Regency.svg/1200px-Coat_of_arms_of_Sukoharjo_Regency.svg.png" 
+                 alt="Logo Pemkab Sukoharjo" 
+                 class="h-16 object-contain">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Logo_of_Ministry_of_Environment_and_Forestry_%28Indonesia%29.svg/1200px-Logo_of_Ministry_of_Environment_and_Forestry_%28Indonesia%29.svg.png" 
+                 alt="Logo Kementerian Lingkungan Hidup" 
+                 class="h-16 object-contain">
+          </div>
+          <div>
+            <h1 class="text-xl md:text-2xl font-bold text-white">Dinas Lingkungan Hidup</h1>
+            <p class="text-white text-sm md:text-base">Kabupaten Sukoharjo</p>
+          </div>
+        </div>
+        <div class="text-white text-center md:text-right">
+          <p class="text-lg font-semibold">Sistem Laporan Permohonan Bantuan</p>
+          <p class="text-sm">Bank Sampah Sukoharjo</p>
+        </div>
       </div>
-      <button onclick="submitData()" class="bg-blue-500 text-white px-4 py-2 rounded mt-4">Kirim</button>
+    </div>
+  </div>
+
+  <div class="container mx-auto p-4 md:p-6">
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
+      <div class="bg-green-600 px-6 py-3">
+        <h2 class="text-xl font-bold text-white">Laporan Permohonan Bantuan</h2>
+      </div>
+      
+      <!-- Form Input -->
+      <div class="p-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label for="tanggal" class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
+            <input type="date" id="tanggal" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+          </div>
+          <div>
+            <label for="noSurat" class="block text-sm font-medium text-gray-700 mb-1">Nomor Surat</label>
+            <input type="text" id="noSurat" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Masukkan nomor surat" />
+          </div>
+          <div>
+            <label for="pemohon" class="block text-sm font-medium text-gray-700 mb-1">Nama Pemohon/Instansi</label>
+            <input type="text" id="pemohon" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Nama lengkap pemohon" />
+          </div>
+          <div>
+            <label for="alamat" class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
+            <input type="text" id="alamat" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Alamat lengkap" />
+          </div>
+          <div>
+            <label for="keterangan" class="block text-sm font-medium text-gray-700 mb-1">Keterangan Permohonan</label>
+            <input type="text" id="keterangan" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Jenis bantuan yang dimohon" />
+          </div>
+          <div>
+            <label for="realisasi" class="block text-sm font-medium text-gray-700 mb-1">Status Realisasi</label>
+            <select id="realisasi" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+              <option value="">Pilih status realisasi</option>
+              <option value="Sudah">Sudah Direalisasi</option>
+              <option value="Belum">Belum Direalisasi</option>
+              <option value="TL">Tindak Lanjut</option>
+            </select>
+          </div>
+        </div>
+        <div class="mt-6 flex justify-end">
+          <button onclick="submitData()" class="btn-primary text-white px-6 py-2 rounded-lg font-medium flex items-center">
+            <i class="fas fa-paper-plane mr-2"></i> Kirim Permohonan
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Statistik -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-8">
-      <div class="bg-green-100 p-4 rounded shadow">
-        <h3 class="text-lg font-semibold">Total Permohonan</h3>
-        <p class="text-2xl font-bold text-green-700" id="totalData">-</p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
+      <div class="stat-card bg-white rounded-xl shadow-md overflow-hidden border-l-4 border-green-500">
+        <div class="p-6">
+          <div class="flex items-center">
+            <div class="p-3 rounded-full bg-green-100 text-green-600 mr-4">
+              <i class="fas fa-file-alt text-lg"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold text-gray-700">Total Permohonan</h3>
+              <p class="text-2xl font-bold text-gray-900" id="totalData">0</p>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="bg-blue-100 p-4 rounded shadow">
-        <h3 class="text-lg font-semibold">Sudah Direalisasi</h3>
-        <p class="text-2xl font-bold text-blue-700" id="sudahData">-</p>
+      <div class="stat-card bg-white rounded-xl shadow-md overflow-hidden border-l-4 border-blue-500">
+        <div class="p-6">
+          <div class="flex items-center">
+            <div class="p-3 rounded-full bg-blue-100 text-blue-600 mr-4">
+              <i class="fas fa-check-circle text-lg"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold text-gray-700">Sudah Direalisasi</h3>
+              <p class="text-2xl font-bold text-gray-900" id="sudahData">0</p>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="bg-yellow-100 p-4 rounded shadow">
-        <h3 class="text-lg font-semibold">Belum/TL</h3>
-        <p class="text-2xl font-bold text-yellow-700" id="belumData">-</p>
+      <div class="stat-card bg-white rounded-xl shadow-md overflow-hidden border-l-4 border-yellow-500">
+        <div class="p-6">
+          <div class="flex items-center">
+            <div class="p-3 rounded-full bg-yellow-100 text-yellow-600 mr-4">
+              <i class="fas fa-clock text-lg"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold text-gray-700">Belum/TL</h3>
+              <p class="text-2xl font-bold text-gray-900" id="belumData">0</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Edukasi -->
-    <section class="bg-white p-4 rounded shadow my-8">
-      <h2 class="text-xl font-semibold mb-2">Tips Pengelolaan Sampah Rumah Tangga</h2>
-      <ul class="list-disc list-inside text-gray-700 space-y-1">
-        <li>Pisahkan sampah organik dan anorganik.</li>
-        <li>Gunakan kembali barang layak pakai (reuse).</li>
-        <li>Manfaatkan sampah organik untuk kompos.</li>
-        <li>Daur ulang barang plastik dan kertas.</li>
-        <li>Gunakan bank sampah untuk menabung sampah anorganik.</li>
-      </ul>
-    </section>
+    <!-- Info Boxes -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <!-- Edukasi -->
+      <div class="bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="bg-blue-600 px-6 py-3">
+          <h2 class="text-xl font-bold text-white flex items-center">
+            <i class="fas fa-lightbulb mr-2"></i> Tips Pengelolaan Sampah
+          </h2>
+        </div>
+        <div class="p-6">
+          <ul class="space-y-3">
+            <li class="flex items-start">
+              <i class="fas fa-recycle text-green-500 mt-1 mr-3"></i>
+              <span>Pisahkan sampah organik dan anorganik sejak dari sumbernya</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-shopping-bag text-green-500 mt-1 mr-3"></i>
+              <span>Gunakan kembali (reuse) barang yang masih layak pakai</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-leaf text-green-500 mt-1 mr-3"></i>
+              <span>Manfaatkan sampah organik untuk kompos atau pakan ternak</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-trash-restore text-green-500 mt-1 mr-3"></i>
+              <span>Daur ulang plastik, kertas, logam melalui bank sampah</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-piggy-bank text-green-500 mt-1 mr-3"></i>
+              <span>Manfaatkan bank sampah untuk menabung dan mendapatkan nilai ekonomi</span>
+            </li>
+          </ul>
+        </div>
+      </div>
 
-    <!-- Kontak -->
-    <section class="bg-white p-4 rounded shadow my-8">
-      <h2 class="text-xl font-semibold mb-2">Kontak Dinas Lingkungan Hidup Sukoharjo</h2>
-      <p class="text-gray-700">Jl. Jend. Sudirman No.199, Sukoharjo</p>
-      <p class="text-gray-700">Telp: (0271) 593067</p>
-      <p class="text-gray-700">Email: dlh@sukoharjokab.go.id</p>
-    </section>
+      <!-- Kontak -->
+      <div class="bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="bg-green-600 px-6 py-3">
+          <h2 class="text-xl font-bold text-white flex items-center">
+            <i class="fas fa-address-card mr-2"></i> Kontak Kami
+          </h2>
+        </div>
+        <div class="p-6">
+          <div class="flex items-start mb-4">
+            <i class="fas fa-map-marker-alt text-green-500 mt-1 mr-4 text-lg"></i>
+            <div>
+              <h3 class="font-semibold text-gray-800">Alamat Kantor</h3>
+              <p class="text-gray-600">Jl. Jend. Sudirman No.199, Sukoharjo, Jawa Tengah</p>
+            </div>
+          </div>
+          <div class="flex items-start mb-4">
+            <i class="fas fa-phone-alt text-green-500 mt-1 mr-4 text-lg"></i>
+            <div>
+              <h3 class="font-semibold text-gray-800">Telepon</h3>
+              <p class="text-gray-600">(0271) 593067</p>
+            </div>
+          </div>
+          <div class="flex items-start mb-4">
+            <i class="fas fa-envelope text-green-500 mt-1 mr-4 text-lg"></i>
+            <div>
+              <h3 class="font-semibold text-gray-800">Email</h3>
+              <p class="text-gray-600">dlh@sukoharjokab.go.id</p>
+            </div>
+          </div>
+          <div class="flex items-start">
+            <i class="fas fa-clock text-green-500 mt-1 mr-4 text-lg"></i>
+            <div>
+              <h3 class="font-semibold text-gray-800">Jam Operasional</h3>
+              <p class="text-gray-600">Senin-Jumat: 08.00-16.00 WIB</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Tabel Data -->
-    <h2 class="text-xl font-semibold my-4">Data Permohonan</h2>
-    <div class="overflow-auto">
-      <table class="min-w-full bg-white rounded shadow">
-        <thead>
-          <tr class="bg-gray-200 text-left">
-            <th class="py-2 px-4">Tanggal</th>
-            <th class="py-2 px-4">No Surat</th>
-            <th class="py-2 px-4">Pemohon</th>
-            <th class="py-2 px-4">Alamat</th>
-            <th class="py-2 px-4">Keterangan</th>
-            <th class="py-2 px-4">Realisasi</th>
-          </tr>
-        </thead>
-        <tbody id="dataTable"></tbody>
-      </table>
+    <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8">
+      <div class="bg-green-600 px-6 py-3">
+        <h2 class="text-xl font-bold text-white flex items-center">
+          <i class="fas fa-table mr-2"></i> Data Permohonan Bantuan
+        </h2>
+      </div>
+      <div class="p-6">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No Surat</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pemohon</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Alamat</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keterangan</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Realisasi</th>
+              </tr>
+            </thead>
+            <tbody id="dataTable" class="bg-white divide-y divide-gray-200">
+              <!-- Data will be inserted here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-6">
+    <div class="container mx-auto px-4">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="mb-4 md:mb-0">
+          <p class="text-sm">© 2023 Dinas Lingkungan Hidup Kabupaten Sukoharjo</p>
+          <p class="text-xs text-gray-400">Sistem Laporan Permohonan Bantuan Bank Sampah</p>
+        </div>
+        <div class="flex space-x-4">
+          <a href="#" class="text-gray-300 hover:text-white">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="#" class="text-gray-300 hover:text-white">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="#" class="text-gray-300 hover:text-white">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="#" class="text-gray-300 hover:text-white">
+            <i class="fab fa-youtube"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
 
   <!-- Script -->
   <script>
     const url = "https://script.google.com/macros/s/AKfycbwZp5KxhG0vJOMz9owg-U_3kDBah9r-PqlYhKs8CHTh0UdB0duiAEJSxMUwACzI0aW7/exec";
 
     function submitData() {
+      const tanggal = document.getElementById("tanggal");
+      const noSurat = document.getElementById("noSurat");
+      const pemohon = document.getElementById("pemohon");
+      const alamat = document.getElementById("alamat");
+      const keterangan = document.getElementById("keterangan");
+      
+      // Simple validation
+      if (!tanggal.value || !noSurat.value || !pemohon.value || !alamat.value || !keterangan.value) {
+        alert("Harap lengkapi semua data permohonan!");
+        return;
+      }
+
       const data = {
-        tanggal: document.getElementById("tanggal").value,
-        noSurat: document.getElementById("noSurat").value,
-        pemohon: document.getElementById("pemohon").value,
-        alamat: document.getElementById("alamat").value,
-        keterangan: document.getElementById("keterangan").value,
+        tanggal: tanggal.value,
+        noSurat: noSurat.value,
+        pemohon: pemohon.value,
+        alamat: alamat.value,
+        keterangan: keterangan.value,
         realisasi: document.getElementById("realisasi").value,
       };
+
+      // Show loading state
+      const button = document.querySelector('button[onclick="submitData()"]');
+      button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Mengirim...';
+      button.disabled = true;
 
       fetch(url, {
         method: "POST",
@@ -105,7 +316,33 @@
       .then(() => {
         alert("Data berhasil dikirim!");
         location.reload();
+      })
+      .catch(() => {
+        alert("Terjadi kesalahan saat mengirim data.");
+        button.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Kirim Permohonan';
+        button.disabled = false;
       });
+    }
+
+    // Format date to local Indonesian format
+    function formatDate(dateString) {
+      if (!dateString) return '-';
+      const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+      return new Date(dateString).toLocaleDateString('id-ID', options);
+    }
+
+    // Get status badge
+    function getStatusBadge(status) {
+      if (!status) return '<span class="px-2 py-1 text-xs rounded">-</span>';
+      const lowerStatus = status.toLowerCase();
+      if (lowerStatus === 'sudah') {
+        return '<span class="px-2 py-1 text-xs font-semibold rounded bg-green-100 text-green-800">Sudah</span>';
+      } else if (lowerStatus === 'belum') {
+        return '<span class="px-2 py-1 text-xs font-semibold rounded bg-yellow-100 text-yellow-800">Belum</span>';
+      } else if (lowerStatus === 'tl') {
+        return '<span class="px-2 py-1 text-xs font-semibold rounded bg-red-100 text-red-800">TL</span>';
+      }
+      return status;
     }
 
     fetch(url)
@@ -114,25 +351,52 @@
         const table = document.getElementById("dataTable");
         let total = 0, sudah = 0, belum = 0;
 
-        data.forEach(item => {
+        // Clear existing data
+        table.innerHTML = '';
+
+        if (data.length === 0) {
           const row = document.createElement("tr");
           row.innerHTML = `
-            <td class="border px-4 py-2">${item.tanggal}</td>
-            <td class="border px-4 py-2">${item.noSurat}</td>
-            <td class="border px-4 py-2">${item.pemohon}</td>
-            <td class="border px-4 py-2">${item.alamat}</td>
-            <td class="border px-4 py-2">${item.keterangan}</td>
-            <td class="border px-4 py-2">${item.realisasi}</td>
+            <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+              Belum ada data permohonan
+            </td>
           `;
           table.appendChild(row);
-          total++;
-          if (item.realisasi.toLowerCase() === "sudah") sudah++;
-          else belum++;
-        });
+        } else {
+          data.forEach(item => {
+            const row = document.createElement("tr");
+            row.className = "hover:bg-gray-50";
+            row.innerHTML = `
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formatDate(item.tanggal)}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${item.noSurat || '-'}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.pemohon || '-'}</td>
+              <td class="px-6 py-4 text-sm text-gray-500">${item.alamat || '-'}</td>
+              <td class="px-6 py-4 text-sm text-gray-500">${item.keterangan || '-'}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                ${getStatusBadge(item.realisasi)}
+              </td>
+            `;
+            table.appendChild(row);
+            total++;
+            if (item.realisasi && item.realisasi.toLowerCase() === "sudah") sudah++;
+            else belum++;
+          });
+        }
 
         document.getElementById("totalData").textContent = total;
         document.getElementById("sudahData").textContent = sudah;
         document.getElementById("belumData").textContent = belum;
+      })
+      .catch(error => {
+        console.error("Error fetching data:", error);
+        const table = document.getElementById("dataTable");
+        table.innerHTML = `
+          <tr>
+            <td colspan="6" class="px-6 py-4 text-center text-red-500">
+              Gagal memuat data. Silakan coba lagi nanti.
+            </td>
+          </tr>
+        `;
       });
   </script>
 </body>
