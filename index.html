@@ -1,90 +1,139 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Laporan Permohonan Bank Sampah</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 text-gray-800">
-  <div class="max-w-4xl mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4">Formulir Permohonan Bantuan</h1>
-    <form id="permohonanForm" class="bg-white shadow-md rounded p-4 mb-8">
+<body class="bg-gray-100 text-gray-900">
+  <div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold mb-4 text-center">Formulir Permohonan Bantuan</h1>
+
+    <!-- Form Input -->
+    <div class="bg-white p-6 rounded shadow-md mb-6">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input name="tanggal" type="date" class="border p-2 rounded" placeholder="Tanggal Permohonan" required />
-        <input name="noSurat" type="text" class="border p-2 rounded" placeholder="No Surat" required />
-        <input name="namaPemohon" type="text" class="border p-2 rounded" placeholder="Nama Pemohon/Instansi" required />
-        <input name="alamat" type="text" class="border p-2 rounded" placeholder="Alamat" required />
-        <input name="keterangan" type="text" class="border p-2 rounded" placeholder="Keterangan Permohonan" required />
-        <select name="realisasi" class="border p-2 rounded">
+        <input type="date" id="tanggal" class="border p-2 rounded w-full" placeholder="dd----yyyy" />
+        <input type="text" id="noSurat" class="border p-2 rounded w-full" placeholder="No Surat" />
+        <input type="text" id="pemohon" class="border p-2 rounded w-full" placeholder="Nama Pemohon/Instansi" />
+        <input type="text" id="alamat" class="border p-2 rounded w-full" placeholder="Alamat" />
+        <input type="text" id="keterangan" class="border p-2 rounded w-full" placeholder="Keterangan Permohonan" />
+        <select id="realisasi" class="border p-2 rounded w-full">
           <option value="">Status Realisasi</option>
           <option value="Sudah">Sudah</option>
           <option value="Belum">Belum</option>
           <option value="TL">TL</option>
         </select>
       </div>
-      <button type="submit" class="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Kirim</button>
-    </form>
+      <button onclick="submitData()" class="bg-blue-500 text-white px-4 py-2 rounded mt-4">Kirim</button>
+    </div>
 
-    <h2 class="text-xl font-semibold mb-2">Data Permohonan</h2>
+    <!-- Statistik -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-8">
+      <div class="bg-green-100 p-4 rounded shadow">
+        <h3 class="text-lg font-semibold">Total Permohonan</h3>
+        <p class="text-2xl font-bold text-green-700" id="totalData">-</p>
+      </div>
+      <div class="bg-blue-100 p-4 rounded shadow">
+        <h3 class="text-lg font-semibold">Sudah Direalisasi</h3>
+        <p class="text-2xl font-bold text-blue-700" id="sudahData">-</p>
+      </div>
+      <div class="bg-yellow-100 p-4 rounded shadow">
+        <h3 class="text-lg font-semibold">Belum/TL</h3>
+        <p class="text-2xl font-bold text-yellow-700" id="belumData">-</p>
+      </div>
+    </div>
+
+    <!-- Edukasi -->
+    <section class="bg-white p-4 rounded shadow my-8">
+      <h2 class="text-xl font-semibold mb-2">Tips Pengelolaan Sampah Rumah Tangga</h2>
+      <ul class="list-disc list-inside text-gray-700 space-y-1">
+        <li>Pisahkan sampah organik dan anorganik.</li>
+        <li>Gunakan kembali barang layak pakai (reuse).</li>
+        <li>Manfaatkan sampah organik untuk kompos.</li>
+        <li>Daur ulang barang plastik dan kertas.</li>
+        <li>Gunakan bank sampah untuk menabung sampah anorganik.</li>
+      </ul>
+    </section>
+
+    <!-- Kontak -->
+    <section class="bg-white p-4 rounded shadow my-8">
+      <h2 class="text-xl font-semibold mb-2">Kontak Dinas Lingkungan Hidup Sukoharjo</h2>
+      <p class="text-gray-700">Jl. Jend. Sudirman No.199, Sukoharjo</p>
+      <p class="text-gray-700">Telp: (0271) 593067</p>
+      <p class="text-gray-700">Email: dlh@sukoharjokab.go.id</p>
+    </section>
+
+    <!-- Tabel Data -->
+    <h2 class="text-xl font-semibold my-4">Data Permohonan</h2>
     <div class="overflow-auto">
-      <table class="min-w-full bg-white">
+      <table class="min-w-full bg-white rounded shadow">
         <thead>
-          <tr>
-            <th class="py-2 px-4 border">Tanggal</th>
-            <th class="py-2 px-4 border">No Surat</th>
-            <th class="py-2 px-4 border">Pemohon</th>
-            <th class="py-2 px-4 border">Alamat</th>
-            <th class="py-2 px-4 border">Keterangan</th>
-            <th class="py-2 px-4 border">Realisasi</th>
+          <tr class="bg-gray-200 text-left">
+            <th class="py-2 px-4">Tanggal</th>
+            <th class="py-2 px-4">No Surat</th>
+            <th class="py-2 px-4">Pemohon</th>
+            <th class="py-2 px-4">Alamat</th>
+            <th class="py-2 px-4">Keterangan</th>
+            <th class="py-2 px-4">Realisasi</th>
           </tr>
         </thead>
-        <tbody id="dataTable">
-          <!-- Data akan dimuat di sini -->
-        </tbody>
+        <tbody id="dataTable"></tbody>
       </table>
     </div>
   </div>
 
+  <!-- Script -->
   <script>
-    // URL Web App dari Google Apps Script
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbwZp5KxhG0vJOMz9owg-U_3kDBah9r-PqlYhKs8CHTh0UdB0duiAEJSxMUwACzI0aW7/exec';
-    const form = document.getElementById('permohonanForm');
+    const url = "https://script.google.com/macros/s/AKfycbwZp5KxhG0vJOMz9owg-U_3kDBah9r-PqlYhKs8CHTh0UdB0duiAEJSxMUwACzI0aW7/exec";
 
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      const formData = new FormData(form);
-      fetch(scriptURL, { method: 'POST', body: formData })
-        .then(response => {
-          alert('Permohonan berhasil dikirim!');
-          form.reset();
-          loadData();
-        })
-        .catch(error => alert('Gagal mengirim data.'));
-    });
+    function submitData() {
+      const data = {
+        tanggal: document.getElementById("tanggal").value,
+        noSurat: document.getElementById("noSurat").value,
+        pemohon: document.getElementById("pemohon").value,
+        alamat: document.getElementById("alamat").value,
+        keterangan: document.getElementById("keterangan").value,
+        realisasi: document.getElementById("realisasi").value,
+      };
 
-    async function loadData() {
-      const sheetURL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTw6O_5n57sUmmgKBM_nnfQSTvt7bG6mQgtGk6JE7vrNVsB2vco1kWEEOlVFi2UUkrT_RcDwpIOQ04j/pub?gid=0&single=true&output=csv';
-      const res = await fetch(sheetURL);
-      const text = await res.text();
-      const rows = text.split('\n').slice(1); // Skip header
-      const tbody = document.getElementById('dataTable');
-      tbody.innerHTML = '';
-      rows.forEach(row => {
-        const cols = row.split(',');
-        const tr = document.createElement('tr');
-        cols.forEach(col => {
-          const td = document.createElement('td');
-          td.textContent = col;
-          td.className = 'border px-4 py-2';
-          tr.appendChild(td);
-        });
-        tbody.appendChild(tr);
+      fetch(url, {
+        method: "POST",
+        body: JSON.stringify(data),
+      })
+      .then(res => res.text())
+      .then(() => {
+        alert("Data berhasil dikirim!");
+        location.reload();
       });
     }
 
-    loadData();
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        const table = document.getElementById("dataTable");
+        let total = 0, sudah = 0, belum = 0;
+
+        data.forEach(item => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td class="border px-4 py-2">${item.tanggal}</td>
+            <td class="border px-4 py-2">${item.noSurat}</td>
+            <td class="border px-4 py-2">${item.pemohon}</td>
+            <td class="border px-4 py-2">${item.alamat}</td>
+            <td class="border px-4 py-2">${item.keterangan}</td>
+            <td class="border px-4 py-2">${item.realisasi}</td>
+          `;
+          table.appendChild(row);
+          total++;
+          if (item.realisasi.toLowerCase() === "sudah") sudah++;
+          else belum++;
+        });
+
+        document.getElementById("totalData").textContent = total;
+        document.getElementById("sudahData").textContent = sudah;
+        document.getElementById("belumData").textContent = belum;
+      });
   </script>
 </body>
 </html>
-Add initial website index.html
