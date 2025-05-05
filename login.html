@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login Sederhana</title>
+</head>
+<body>
+  <h2>Login</h2>
+  <form id="loginForm">
+    <label>Username:</label><br>
+    <input type="text" id="username"><br>
+    <label>Password:</label><br>
+    <input type="password" id="password"><br><br>
+    <button type="submit">Login</button>
+  </form>
+
+  <p id="loginStatus"></p>
+
+  <script>
+    const USERNAME = "admin";
+    const PASSWORD = "12345";
+
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      const user = document.getElementById("username").value;
+      const pass = document.getElementById("password").value;
+
+      if (user === USERNAME && pass === PASSWORD) {
+        document.getElementById("loginStatus").innerText = "Login berhasil!";
+        // Redirect jika perlu
+        // window.location.href = "dashboard.html";
+      } else {
+        document.getElementById("loginStatus").innerText = "Login gagal. Coba lagi.";
+      }
+    });
+  </script>
+</body>
+</html>
