@@ -1,68 +1,235 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Login Bro../title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login | DLH Sukoharjo</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 400px;
-      margin: 0 auto;
-      padding: 20px;
+    :root {
+      --primary: #2e7d32;
+      --primary-dark: #1b5e20;
+      --primary-light: #81c784;
+      --accent: #ffc107;
+      --text: #333;
+      --light: #f5f5f5;
+      --white: #ffffff;
+      --error: #d32f2f;
     }
-    h2 {
-      color: #333;
-      text-align: center;
-    }
-    form {
-      background: #f9f9f9;
-      padding: 20px;
-      border-radius: 5px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-    input {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 15px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
+    
+    * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
-    button {
-      background: #4CAF50;
-      color: white;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      color: var(--text);
+    }
+    
+    .login-container {
       width: 100%;
+      max-width: 420px;
+      background: var(--white);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      animation: fadeIn 0.6s ease-out;
     }
-    button:hover {
-      background: #45a049;
-    }
-    #loginStatus {
-      margin-top: 15px;
-      padding: 10px;
+    
+    .login-header {
+      background: var(--primary);
+      color: var(--white);
+      padding: 30px 20px;
       text-align: center;
-      border-radius: 4px;
+      position: relative;
+    }
+    
+    .login-header h2 {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    
+    .login-header p {
+      opacity: 0.9;
+      font-size: 14px;
+    }
+    
+    .logo {
+       <div class="logo-kanan">
+      <img src="logo/Logo-01.png" alt="Logo Bidang" class="h-[150px] max-w-[150px] w-auto"">
+    </div>
+    }
+    
+    .logo i {
+      color: var(--primary);
+      font-size: 28px;
+    }
+    
+    .login-form {
+      padding: 30px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      font-size: 14px;
+      color: var(--text);
+    }
+    
+    .form-control {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 15px;
+      transition: all 0.3s;
+      background-color: var(--light);
+    }
+    
+    .form-control:focus {
+      border-color: var(--primary-light);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.2);
+      background-color: var(--white);
+    }
+    
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--primary);
+      color: var(--white);
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 10px;
+    }
+    
+    .btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+    }
+    
+    .btn:active {
+      transform: translateY(0);
+    }
+    
+    #loginStatus {
+      margin-top: 20px;
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 14px;
+      display: none;
+    }
+    
+    .success {
+      background-color: rgba(46, 125, 50, 0.1);
+      color: var(--primary-dark);
+      display: block;
+    }
+    
+    .error {
+      background-color: rgba(211, 47, 47, 0.1);
+      color: var(--error);
+      display: block;
+    }
+    
+    .footer-links {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      font-size: 13px;
+    }
+    
+    .footer-links a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    
+    .footer-links a:hover {
+      color: var(--primary-dark);
+      text-decoration: underline;
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 480px) {
+      .login-container {
+        border-radius: 12px;
+      }
+      
+      .login-header {
+        padding: 25px 15px;
+      }
+      
+      .login-form {
+        padding: 25px 20px;
+      }
     }
   </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-  <h2>Login</h2>
-  <form id="loginForm">
-    <label>Username:</label>
-    <input type="text" id="username" placeholder="Masukkan username">
-    <label>Password:</label>
-    <input type="password" id="password" placeholder="Masukkan password">
-    <button type="submit">Login</button>
-  </form>
-
-  <p id="loginStatus"></p>
+  <div class="login-container">
+    <div class="login-header">
+      <div class="logo">
+        <i class="fas fa-leaf"></i>
+      </div>
+      <h2>Selamat Datang</h2>
+    </div>
+    
+    <form id="loginForm" class="login-form">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" class="form-control" placeholder="Masukkan username" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" class="form-control" placeholder="Masukkan password" required>
+      </div>
+      
+      <button type="submit" class="btn">
+        <i class="fas fa-sign-in-alt"></i> Login
+      </button>
+      
+      <div id="loginStatus"></div>
+      
+      <div class="footer-links">
+        <a href="#"><i class="fas fa-question-circle"></i> Lupa password?</a>
+        <a href="#"><i class="fas fa-user-plus"></i> Daftar akun baru</a>
+      </div>
+    </form>
+  </div>
 
   <script>
     const USERNAME = "DLHSUKOHARJO";
@@ -70,18 +237,43 @@
 
     document.getElementById("loginForm").addEventListener("submit", function(e) {
       e.preventDefault();
-      const user = document.getElementById("username").value;
+      const user = document.getElementById("username").value.trim();
       const pass = document.getElementById("password").value;
+      const statusElement = document.getElementById("loginStatus");
 
       if (user === USERNAME && pass === PASSWORD) {
-        document.getElementById("loginStatus").innerText = "Login berhasil!";
-        document.getElementById("loginStatus").style.color = "green";
-        window.location.href="index.html"; // Redirect ke halaman utama setelah login berhasil
+        statusElement.innerText = "Login berhasil! Mengarahkan...";
+        statusElement.className = "success";
+        
+        // Simulate loading before redirect
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 1500);
       } else {
-        document.getElementById("loginStatus").innerText = "Login gagal. Coba lagi.";
-        document.getElementById("loginStatus").style.color = "red";
+        statusElement.innerText = "Username atau password salah. Silakan coba lagi.";
+        statusElement.className = "error";
+        
+        // Shake animation for error
+        this.style.animation = "shake 0.5s";
+        setTimeout(() => {
+          this.style.animation = "";
+        }, 500);
       }
+      
+      // Always show status message
+      statusElement.style.display = "block";
     });
+
+    // Add shake animation dynamically
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+        20%, 40%, 60%, 80% { transform: translateX(5px); }
+      }
+    `;
+    document.head.appendChild(style);
   </script>
 </body>
 </html>
