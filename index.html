@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Laporan Permohonan Bantuan Sarpras - Dinas Lingkungan Hidup Kabupaten Sukoharjo </title>
+  <title>Sistem Laporan DLH Sukoharjo</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
   <style>
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
     body {
       font-family: 'Poppins', sans-serif;
       background-color: #f0fdf4;
@@ -29,392 +29,140 @@
     }
     .logo-kiri {
       position: absolute;
-      left:20px;
-      top:10px;
+      left: 20px;
+      top: 10px;
     }
     .logo-kanan {
       position: absolute;
-      right:20px;
-      top:10px;
+      right: 20px;
+      top: 10px;
     }
     .header-content {
       position: relative;
-      padding-top:80px;
+      padding-top: 80px;
     }
   </style>
 </head>
 <body>
-  <!-- Header -->
-  <div class="hijau-gelap py-4 text-white">
-    <!-- logo-kiri -->
-  <div class="logo-kiri">
-  <div class="p-2 bg-transparent shadow-none">
-  <img src="logo/Logo-01.png"
-     alt="Logo Bidang"
-     class="h-[150px] max-w-[150px] w-auto"
-     onerror="this.onerror=null; this.src='https://via.placeholder.com/150?text=Logo';">
-      <!-- logo-kanan -->
+  <!-- Header with Corner Logos -->
+  <div class="hijau-gelap py-4 text-white relative min-h-[180px]">
+    <!-- Logo Kabupaten (Pojok Kiri) -->
+    <div class="logo-kiri">
+      <img src="logo/PEMKAB-SUKOHARJO-01.png" alt="Logo Kabupaten" class="h-16 border-2 border-white rounded">
+    </div>
+    
+    <!-- Logo Bidang (Pojok Kanan) -->
     <div class="logo-kanan">
-    <div class="p-2 bg-transparent shadow-none">
-    <img src="logo/PEMKAB-SUKOHARJO-01.png"
-            alt="Logo Kabupaten"
-            class="h-[150px] max-w-[150px] w-auto"
-            onerror="this.onerror=null; this.src='https://via.placeholder.com/150?text=Kabupaten';">
-    <div class="container mx-auto px-4">
-      <div class="flex flex-col items-center text-center">
-        <!-- Combined Title -->
-        <div class="mb-4">
-          <h1 class="text-2xl md:text-3xl font-bold text-white-800">
-            DINAS LINGKUNGAN HIDUP KABUPATEN SUKOHARJO
-          </h1>
-          <h2 class="text-xl md:text-2xl text-white-600 mt-2">
-            Sistem Laporan Permohonan Bantuan
-          </h2>
-        </div>
-   
+      <img src="logo/Logo-01.png" alt="Logo Bidang" class="h-16 border-2 border-white rounded">
+    </div>
+    
+    <!-- Judul Tengah -->
+    <div class="header-content text-center">
+      <h1 class="text-2xl font-bold mb-1">DINAS LINGKUNGAN HIDUP</h1>
+      <h2 class="text-xl mb-2">KABUPATEN SUKOHARJO</h2>
+      <p class="text-lg">Sistem Laporan Permohonan Bantuan</p>
+    </div>
   </div>
 
+  <!-- Main Content -->
   <div class="container mx-auto p-4 md:p-6">
-    <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
-      <div class="bg-green-600 px-6 py-3">
-        <h2 class="text-xl font-bold text-white">Laporan Permohonan Bantuan</h2>
+    <!-- Form Section -->
+    <div class="bg-white rounded-lg border-2 border-hijau card-shadow mb-6">
+      <div class="hijau-terang px-6 py-3">
+        <h2 class="text-xl font-bold text-white">LAPORAN PERMOHONAN BANTUAN</h2>
       </div>
       
-      <!-- Form Input -->
-      <div class="p-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Kolom Kiri -->
+        <div class="space-y-4">
           <div>
-            <label for="tanggal" class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
-            <input type="date" id="tanggal" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+            <label class="block font-medium text-gray-700 mb-1">TANGGAL</label>
+            <input type="date" class="w-full px-4 py-2 border-2 border-hijau rounded-lg">
           </div>
+          
           <div>
-            <label for="noSurat" class="block text-sm font-medium text-gray-700 mb-1">Nomor Surat</label>
-            <input type="text" id="noSurat" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Masukkan nomor surat" />
+            <label class="block font-medium text-gray-700 mb-1">NAMA PEMOHON/INSTANSI</label>
+            <input type="text" class="w-full px-4 py-2 border-2 border-hijau rounded-lg" placeholder="Nama lengkap pemohon">
           </div>
+          
           <div>
-            <label for="pemohon" class="block text-sm font-medium text-gray-700 mb-1">Nama Pemohon/Instansi</label>
-            <input type="text" id="pemohon" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Nama lengkap pemohon" />
+            <label class="block font-medium text-gray-700 mb-1">KETERANGAN PERMOHONAN</label>
+            <input type="text" class="w-full px-4 py-2 border-2 border-hijau rounded-lg" placeholder="Jenis bantuan yang dimohon">
           </div>
+        </div>
+        
+        <!-- Kolom Kanan -->
+        <div class="space-y-4">
           <div>
-            <label for="alamat" class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
-            <input type="text" id="alamat" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Alamat lengkap" />
+            <label class="block font-medium text-gray-700 mb-1">NOMOR SURAT</label>
+            <input type="text" class="w-full px-4 py-2 border-2 border-hijau rounded-lg" placeholder="Masukkan nomor surat">
           </div>
+          
           <div>
-            <label for="keterangan" class="block text-sm font-medium text-gray-700 mb-1">Keterangan Permohonan</label>
-            <input type="text" id="keterangan" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Jenis bantuan yang dimohon" />
+            <label class="block font-medium text-gray-700 mb-1">ALAMAT</label>
+            <input type="text" class="w-full px-4 py-2 border-2 border-hijau rounded-lg" placeholder="Alamat lengkap">
           </div>
+          
           <div>
-            <label for="realisasi" class="block text-sm font-medium text-gray-700 mb-1">Status Realisasi</label>
-            <select id="realisasi" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
-              <option value="">Pilih status realisasi</option>
-              <option value="Sudah">Sudah Direalisasi</option>
-              <option value="Belum">Belum Direalisasi</option>
-              <option value="TL">Tindak Lanjut</option>
+            <label class="block font-medium text-gray-700 mb-1">STATUS REALISASI</label>
+            <select class="w-full px-4 py-2 border-2 border-hijau rounded-lg">
+              <option>Pilih status realisasi</option>
+              <option>SUDAH DIREALISASI</option>
+              <option>BELUM DIREALISASI</option>
+              <option>TINDAK LANJUT</option>
             </select>
           </div>
         </div>
-        <div class="mt-6 flex justify-end">
-          <button onclick="submitData()" class="btn-primary text-white px-6 py-2 rounded-lg font-medium flex items-center">
-            <i class="fas fa-paper-plane mr-2"></i> Kirim Permohonan
-          </button>
-        </div>
+      </div>
+      
+      <div class="px-6 pb-6">
+        <button class="btn-hijau text-white px-6 py-2 rounded-lg font-bold w-full md:w-auto border-2 border-hijau-gelap hover:brightness-110 transition">
+          <i class="fas fa-paper-plane mr-2"></i> KIRIM PERMOHONAN
+        </button>
       </div>
     </div>
 
     <!-- Statistik -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
-      <div class="stat-card bg-white rounded-xl shadow-md overflow-hidden border-l-4 border-green-500">
-        <div class="p-6">
-          <div class="flex items-center">
-            <div class="p-3 rounded-full bg-green-100 text-green-600 mr-4">
-              <i class="fas fa-file-alt text-lg"></i>
-            </div>
-            <div>
-              <h3 class="text-lg font-semibold text-gray-700">Total Permohonan</h3>
-              <p class="text-2xl font-bold text-gray-900" id="totalData">0</p>
-            </div>
-          </div>
-        </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div class="bg-white rounded-lg border-2 border-hijau card-shadow p-4 text-center">
+        <h3 class="font-semibold text-gray-700 mb-2">TOTAL PERMOHONAN</h3>
+        <p class="text-3xl font-bold text-hijau-gelap">0</p>
       </div>
-      <div class="stat-card bg-white rounded-xl shadow-md overflow-hidden border-l-4 border-blue-500">
-        <div class="p-6">
-          <div class="flex items-center">
-            <div class="p-3 rounded-full bg-blue-100 text-blue-600 mr-4">
-              <i class="fas fa-check-circle text-lg"></i>
-            </div>
-            <div>
-              <h3 class="text-lg font-semibold text-gray-700">Sudah Direalisasi</h3>
-              <p class="text-2xl font-bold text-gray-900" id="sudahData">0</p>
-            </div>
-          </div>
-        </div>
+      
+      <div class="bg-white rounded-lg border-2 border-hijau card-shadow p-4 text-center">
+        <h3 class="font-semibold text-gray-700 mb-2">SUDAH DIREALISASI</h3>
+        <p class="text-3xl font-bold text-green-600">0</p>
       </div>
-      <div class="stat-card bg-white rounded-xl shadow-md overflow-hidden border-l-4 border-yellow-500">
-        <div class="p-6">
-          <div class="flex items-center">
-            <div class="p-3 rounded-full bg-yellow-100 text-yellow-600 mr-4">
-              <i class="fas fa-clock text-lg"></i>
-            </div>
-            <div>
-              <h3 class="text-lg font-semibold text-gray-700">Belum/TL</h3>
-              <p class="text-2xl font-bold text-gray-900" id="belumData">0</p>
-            </div>
-          </div>
-        </div>
+      
+      <div class="bg-white rounded-lg border-2 border-hijau card-shadow p-4 text-center">
+        <h3 class="font-semibold text-gray-700 mb-2">BELUM/TL</h3>
+        <p class="text-3xl font-bold text-yellow-600">0</p>
       </div>
     </div>
 
-    <!-- Info Boxes -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-      <!-- Edukasi -->
-      <div class="bg-white rounded-xl shadow-md overflow-hidden">
-        <div class="bg-blue-600 px-6 py-3">
-          <h2 class="text-xl font-bold text-white flex items-center">
-            <i class="fas fa-lightbulb mr-2"></i> Tips Pengelolaan Sampah
-          </h2>
-        </div>
-        <div class="p-6">
-          <ul class="space-y-3">
-            <li class="flex items-start">
-              <i class="fas fa-recycle text-green-500 mt-1 mr-3"></i>
-              <span>Pisahkan sampah organik dan anorganik sejak dari sumbernya</span>
-            </li>
-            <li class="flex items-start">
-              <i class="fas fa-shopping-bag text-green-500 mt-1 mr-3"></i>
-              <span>Gunakan kembali (reuse) barang yang masih layak pakai</span>
-            </li>
-            <li class="flex items-start">
-              <i class="fas fa-leaf text-green-500 mt-1 mr-3"></i>
-              <span>Manfaatkan sampah organik untuk kompos atau pakan ternak</span>
-            </li>
-            <li class="flex items-start">
-              <i class="fas fa-trash-restore text-green-500 mt-1 mr-3"></i>
-              <span>Daur ulang plastik, kertas, logam melalui bank sampah</span>
-            </li>
-            <li class="flex items-start">
-              <i class="fas fa-piggy-bank text-green-500 mt-1 mr-3"></i>
-              <span>Manfaatkan bank sampah untuk menabung dan mendapatkan nilai ekonomi</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Kontak -->
-      <div class="bg-white rounded-xl shadow-md overflow-hidden">
-        <div class="bg-green-600 px-6 py-3">
-          <h2 class="text-xl font-bold text-white flex items-center">
-            <i class="fas fa-address-card mr-2"></i> Kontak Kami
-          </h2>
-        </div>
-        <div class="p-6">
-          <div class="flex items-start mb-4">
-            <i class="fas fa-map-marker-alt text-green-500 mt-1 mr-4 text-lg"></i>
-            <div>
-              <h3 class="font-semibold text-gray-800">Alamat Kantor</h3>
-              <p class="text-gray-600">Jl. Jend. Sudirman No.199, Sukoharjo, Jawa Tengah</p>
-            </div>
-          </div>
-          <div class="flex items-start mb-4">
-            <i class="fas fa-phone-alt text-green-500 mt-1 mr-4 text-lg"></i>
-            <div>
-              <h3 class="font-semibold text-gray-800">Telepon</h3>
-              <p class="text-gray-600">(0271) 593067</p>
-            </div>
-          </div>
-          <div class="flex items-start mb-4">
-            <i class="fas fa-envelope text-green-500 mt-1 mr-4 text-lg"></i>
-            <div>
-              <h3 class="font-semibold text-gray-800">Email</h3>
-              <p class="text-gray-600">dlh@sukoharjokab.go.id</p>
-            </div>
-          </div>
-          <div class="flex items-start">
-            <i class="fas fa-clock text-green-500 mt-1 mr-4 text-lg"></i>
-            <div>
-              <h3 class="font-semibold text-gray-800">Jam Operasional</h3>
-              <p class="text-gray-600">Senin-Jumat: 08.00-16.00 WIB</p>
-            </div>
-          </div>
-        </div>
-      </div>
+    <!-- Tips Section -->
+    <div class="bg-white rounded-lg border-2 border-hijau card-shadow p-6 mb-6">
+      <h3 class="font-bold text-hijau-gelap mb-3 text-center">TIPS PENGELOLAAN SAMPAH</h3>
+      <ul class="space-y-2">
+        <li class="flex items-start">
+          <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+          <span>Pisahkan sampah organik dan anorganik sejak dari sumbernya</span>
+        </li>
+        <li class="flex items-start">
+          <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+          <span>Gunakan kembali (reuse) barang yang masih layak pakai</span>
+        </li>
+      </ul>
     </div>
 
-    <!-- Tabel Data -->
-    <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8">
-      <div class="bg-green-600 px-6 py-3">
-        <h2 class="text-xl font-bold text-white flex items-center">
-          <i class="fas fa-table mr-2"></i> Data Permohonan Bantuan
-        </h2>
-      </div>
-      <div class="p-6">
-        <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-              <tr>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No Surat</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pemohon</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Alamat</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keterangan</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Realisasi</th>
-              </tr>
-            </thead>
-            <tbody id="dataTable" class="bg-white divide-y divide-gray-200">
-              <!-- Data will be inserted here -->
-            </tbody>
-          </table>
-        </div>
-      </div>
+    <!-- Kontak -->
+    <div class="bg-white rounded-lg border-2 border-hijau card-shadow p-6">
+      <h3 class="font-bold text-hijau-gelap mb-3 text-center">KONTAK KAMI</h3>
+      <p class="text-center">
+        <i class="fas fa-map-marker-alt text-green-500 mr-2"></i>
+        Jl. Jend. Sudirman No.198, Sukoharjo, Jawa Tengah
+      </p>
     </div>
   </div>
-
-  <!-- Footer -->
-  <footer class="bg-gray-800 text-white py-6">
-    <div class="container mx-auto px-4">
-      <div class="flex flex-col md:flex-row justify-between items-center">
-        <div class="mb-4 md:mb-0">
-          <p class="text-sm">© 2023 Dinas Lingkungan Hidup Kabupaten Sukoharjo</p>
-          <p class="text-xs text-gray-400">Sistem Laporan Permohonan Bantuan Bank Sampah</p>
-        </div>
-        <div class="flex space-x-4">
-          <a href="#" class="text-gray-300 hover:text-white">
-            <i class="fab fa-facebook-f"></i>
-          </a>
-          <a href="#" class="text-gray-300 hover:text-white">
-            <i class="fab fa-twitter"></i>
-          </a>
-          <a href="#" class="text-gray-300 hover:text-white">
-            <i class="fab fa-instagram"></i>
-          </a>
-          <a href="#" class="text-gray-300 hover:text-white">
-            <i class="fab fa-youtube"></i>
-          </a>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Script -->
-  <script>
-    const url = "https://script.google.com/macros/s/AKfycbwZp5KxhG0vJOMz9owg-U_3kDBah9r-PqlYhKs8CHTh0UdB0duiAEJSxMUwACzI0aW7/exec";
-
-    function submitData() {
-      const tanggal = document.getElementById("tanggal");
-      const noSurat = document.getElementById("noSurat");
-      const pemohon = document.getElementById("pemohon");
-      const alamat = document.getElementById("alamat");
-      const keterangan = document.getElementById("keterangan");
-      
-      // Simple validation
-      if (!tanggal.value || !noSurat.value || !pemohon.value || !alamat.value || !keterangan.value) {
-        alert("Harap lengkapi semua data permohonan!");
-        return;
-      }
-
-      const data = {
-        tanggal: tanggal.value,
-        noSurat: noSurat.value,
-        pemohon: pemohon.value,
-        alamat: alamat.value,
-        keterangan: keterangan.value,
-        realisasi: document.getElementById("realisasi").value,
-      };
-
-      // Show loading state
-      const button = document.querySelector('button[onclick="submitData()"]');
-      button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Mengirim...';
-      button.disabled = true;
-
-      fetch(url, {
-        method: "POST",
-        body: JSON.stringify(data),
-      })
-      .then(res => res.text())
-      .then(() => {
-        alert("Data berhasil dikirim!");
-        location.reload();
-      })
-      .catch(() => {
-        alert("Terjadi kesalahan saat mengirim data.");
-        button.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Kirim Permohonan';
-        button.disabled = false;
-      });
-    }
-
-    // Format date to local Indonesian format
-    function formatDate(dateString) {
-      if (!dateString) return '-';
-      const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-      return new Date(dateString).toLocaleDateString('id-ID', options);
-    }
-
-    // Get status badge
-    function getStatusBadge(status) {
-      if (!status) return '<span class="px-2 py-1 text-xs rounded">-</span>';
-      const lowerStatus = status.toLowerCase();
-      if (lowerStatus === 'sudah') {
-        return '<span class="px-2 py-1 text-xs font-semibold rounded bg-green-100 text-green-800">Sudah</span>';
-      } else if (lowerStatus === 'belum') {
-        return '<span class="px-2 py-1 text-xs font-semibold rounded bg-yellow-100 text-yellow-800">Belum</span>';
-      } else if (lowerStatus === 'tl') {
-        return '<span class="px-2 py-1 text-xs font-semibold rounded bg-red-100 text-red-800">TL</span>';
-      }
-      return status;
-    }
-
-    fetch(url)
-      .then(res => res.json())
-      .then(data => {
-        const table = document.getElementById("dataTable");
-        let total = 0, sudah = 0, belum = 0;
-
-        // Clear existing data
-        table.innerHTML = '';
-
-        if (data.length === 0) {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td colspan="6" class="px-6 py-4 text-center text-gray-500">
-              Belum ada data permohonan
-            </td>
-          `;
-          table.appendChild(row);
-        } else {
-          data.forEach(item => {
-            const row = document.createElement("tr");
-            row.className = "hover:bg-gray-50";
-            row.innerHTML = `
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formatDate(item.tanggal)}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${item.noSurat || '-'}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.pemohon || '-'}</td>
-              <td class="px-6 py-4 text-sm text-gray-500">${item.alamat || '-'}</td>
-              <td class="px-6 py-4 text-sm text-gray-500">${item.keterangan || '-'}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                ${getStatusBadge(item.realisasi)}
-              </td>
-            `;
-            table.appendChild(row);
-            total++;
-            if (item.realisasi && item.realisasi.toLowerCase() === "sudah") sudah++;
-            else belum++;
-          });
-        }
-
-        document.getElementById("totalData").textContent = total;
-        document.getElementById("sudahData").textContent = sudah;
-        document.getElementById("belumData").textContent = belum;
-      })
-      .catch(error => {
-        console.error("Error fetching data:", error);
-        const table = document.getElementById("dataTable");
-        table.innerHTML = `
-          <tr>
-            <td colspan="6" class="px-6 py-4 text-center text-red-500">
-              Gagal memuat data. Silakan coba lagi nanti.
-            </td>
-          </tr>
-        `;
-      });
-  </script>
 </body>
-</html> 
+</html>
