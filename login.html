@@ -2,14 +2,63 @@
 <html>
 <head>
   <title>Login Sederhana</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h2 {
+      color: #333;
+      text-align: center;
+    }
+    form {
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    #loginStatus {
+      margin-top: 15px;
+      padding: 10px;
+      text-align: center;
+      border-radius: 4px;
+    }
+  </style>
 </head>
 <body>
   <h2>Login</h2>
   <form id="loginForm">
-    <label>Username:</label><br>
-    <input type="text" id="username"><br>
-    <label>Password:</label><br>
-    <input type="password" id="password"><br><br>
+    <label>Username:</label>
+    <input type="text" id="username" placeholder="Masukkan username">
+    <label>Password:</label>
+    <input type="password" id="password" placeholder="Masukkan password">
     <button type="submit">Login</button>
   </form>
 
@@ -26,10 +75,12 @@
 
       if (user === USERNAME && pass === PASSWORD) {
         document.getElementById("loginStatus").innerText = "Login berhasil!";
+        document.getElementById("loginStatus").style.color = "green";
         // Redirect jika perlu
         // window.location.href = "dashboard.html";
       } else {
         document.getElementById("loginStatus").innerText = "Login gagal. Coba lagi.";
+        document.getElementById("loginStatus").style.color = "red";
       }
     });
   </script>
