@@ -64,6 +64,8 @@
 
   <p id="loginStatus"></p>
 
+  <button onclick="window.location.href='login.html'">Logout</button>
+
   <script>
     const USERNAME = "Panduyuda";
     const PASSWORD = "DLH123";
@@ -76,13 +78,12 @@
       if (user === USERNAME && pass === PASSWORD) {
         document.getElementById("loginStatus").innerText = "Login berhasil!";
         document.getElementById("loginStatus").style.color = "green";
-        window.location.href="index.html";
+        window.location.href="index.html"; // Redirect ke halaman utama setelah login berhasil
       } else {
         document.getElementById("loginStatus").innerText = "Login gagal. Coba lagi.";
         document.getElementById("loginStatus").style.color = "red";
       }
     });
-    <button onclick="window.location.href='login.html'">Logout</button>
   </script>
 </body>
 </html>
