@@ -76,13 +76,13 @@
       if (user === USERNAME && pass === PASSWORD) {
         document.getElementById("loginStatus").innerText = "Login berhasil!";
         document.getElementById("loginStatus").style.color = "green";
-        // Redirect jika perlu
-        // window.location.href = "dashboard.html";
+        window.location.href="index.html";
       } else {
         document.getElementById("loginStatus").innerText = "Login gagal. Coba lagi.";
         document.getElementById("loginStatus").style.color = "red";
       }
     });
+    <button onclick="window.location.href='login.html'">Logout</button>
   </script>
 </body>
 </html>
