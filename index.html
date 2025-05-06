@@ -101,9 +101,14 @@
             <label for="alamat" class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
             <input type="text" id="alamat" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Alamat lengkap" />
           </div>
-          <div>
-            <label for="keterangan" class="block text-sm font-medium text-gray-700 mb-1">Keterangan Permohonan</label>
-            <input type="text" id="keterangan" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Jenis bantuan yang dimohon" />
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Keterangan Permohonan</label>
+            <div id="barangContainer">
+              <!-- Barang akan ditambahkan dinamis di sini -->
+            </div>
+            <button type="button" onclick="tambahBarang()" class="mt-2 text-sm text-green-600 hover:text-green-800 flex items-center">
+              <i class="fas fa-plus-circle mr-1"></i> Tambah Barang
+            </button>
           </div>
           <div>
             <label for="realisasi" class="block text-sm font-medium text-gray-700 mb-1">Status Realisasi</label>
@@ -122,6 +127,32 @@
         </div>
       </div>
     </div>
+
+    <!-- Template untuk input barang (hidden) -->
+    <template id="barangTemplate">
+      <div class="grid grid-cols-2 gap-4 mb-3 barang-item">
+        <div>
+          <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 jenis-barang">
+            <option value="">Pilih Jenis Barang</option>
+            <option value="Komposter">Komposter</option>
+            <option value="Tempat Sampah Pilah">Tempat Sampah Pilah</option>
+            <option value="Gerobak Sampah">Gerobak Sampah</option>
+            <option value="Mesin Pencacah">Mesin Pencacah</option>
+            <option value="Motor Roda 3">Motor Roda 3</option>
+            <option value="Lainnya">Lainnya</option>
+          </select>
+        </div>
+        <div class="flex items-center">
+          <input type="number" min="1" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 jumlah-barang" placeholder="Jumlah">
+          <button type="button" onclick="hapusBarang(this)" class="ml-2 text-red-500 hover:text-red-700">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="col-span-2 catatan-lainnya-container hidden">
+          <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 catatan-lainnya" placeholder="Sebutkan jenis barang">
+        </div>
+      </div>
+    </template>
 
     <!-- Statistik -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
@@ -300,25 +331,82 @@
   <script>
     const url = "https://script.google.com/macros/s/AKfycbwZp5KxhG0vJOMz9owg-U_3kDBah9r-PqlYhKs8CHTh0UdB0duiAEJSxMUwACzI0aW7/exec";
 
+    // Fungsi untuk menambah input barang
+    function tambahBarang() {
+      const template = document.getElementById('barangTemplate');
+      const clone = template.content.cloneNode(true);
+      document.getElementById('barangContainer').appendChild(clone);
+      
+      // Set event listener untuk select jenis barang
+      const selectBarang = document.querySelector('#barangContainer .barang-item:last-child .jenis-barang');
+      selectBarang.addEventListener('change', function() {
+        const container = this.closest('.barang-item').querySelector('.catatan-lainnya-container');
+        if (this.value === 'Lainnya') {
+          container.classList.remove('hidden');
+        } else {
+          container.classList.add('hidden');
+        }
+      });
+    }
+
+    // Fungsi untuk menghapus input barang
+    function hapusBarang(button) {
+      button.closest('.barang-item').remove();
+    }
+
+    // Panggil fungsi tambahBarang() saat halaman dimuat untuk menampilkan satu input default
+    document.addEventListener('DOMContentLoaded', function() {
+      tambahBarang();
+    });
+
     function submitData() {
       const tanggal = document.getElementById("tanggal");
       const noSurat = document.getElementById("noSurat");
       const pemohon = document.getElementById("pemohon");
       const alamat = document.getElementById("alamat");
-      const keterangan = document.getElementById("keterangan");
       
       // Simple validation
-      if (!tanggal.value || !noSurat.value || !pemohon.value || !alamat.value || !keterangan.value) {
+      if (!tanggal.value || !noSurat.value || !pemohon.value || !alamat.value) {
         alert("Harap lengkapi semua data permohonan!");
         return;
       }
+
+      // Kumpulkan data barang
+      const barangItems = document.querySelectorAll('.barang-item');
+      const barangData = [];
+      
+      barangItems.forEach(item => {
+        const jenis = item.querySelector('.jenis-barang').value;
+        const jumlah = item.querySelector('.jumlah-barang').value;
+        
+        if (!jenis || !jumlah) {
+          alert("Harap lengkapi semua data barang!");
+          throw new Error("Data barang tidak lengkap");
+        }
+        
+        let keteranganBarang = jenis;
+        if (jenis === 'Lainnya') {
+          const catatan = item.querySelector('.catatan-lainnya').value;
+          if (!catatan) {
+            alert("Harap isi keterangan untuk barang 'Lainnya'!");
+            throw new Error("Catatan barang lainnya kosong");
+          }
+          keteranganBarang = catatan;
+        }
+        
+        barangData.push({
+          jenis: keteranganBarang,
+          jumlah: parseInt(jumlah)
+        });
+      });
 
       const data = {
         tanggal: tanggal.value,
         noSurat: noSurat.value,
         pemohon: pemohon.value,
         alamat: alamat.value,
-        keterangan: keterangan.value,
+        barang: JSON.stringify(barangData),
+        keterangan: barangData.map(b => `${b.jenis} (${b.jumlah} buah)`).join(", "),
         realisasi: document.getElementById("realisasi").value,
       };
 
@@ -390,7 +478,12 @@
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${item.noSurat || '-'}</td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.pemohon || '-'}</td>
               <td class="px-6 py-4 text-sm text-gray-500">${item.alamat || '-'}</td>
-              <td class="px-6 py-4 text-sm text-gray-500">${item.keterangan || '-'}</td>
+              <td class="px-6 py-4 text-sm text-gray-500">
+                ${item.keterangan || '-'}
+                ${item.barang ? '<div class="text-xs text-gray-400 mt-1">' + 
+                   JSON.parse(item.barang).map(b => `${b.jenis}: ${b.jumlah}`).join(', ') + 
+                   '</div>' : ''}
+              </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 ${getStatusBadge(item.realisasi)}
               </td>
@@ -419,4 +512,4 @@
       });
   </script>
 </body>
-</html> 
+</html>
