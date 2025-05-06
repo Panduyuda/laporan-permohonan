@@ -254,7 +254,8 @@
   <script>
     const USERNAME = "DLHSUKOHARJO";
     const PASSWORD = "123456";
-
+    const USERNAME = "PanduYuda";
+    const PASSWORD = "123456";
     document.getElementById("loginForm").addEventListener("submit", function(e) {
       e.preventDefault();
       const user = document.getElementById("username").value.trim();
@@ -262,7 +263,7 @@
       const statusElement = document.getElementById("loginStatus");
 
       if (user === USERNAME && pass === PASSWORD) {
-        statusElement.innerText = "Login berhasil! Mengarahkan...";
+        statusElement.innerText = "Login berhasil! Langsung Ke Beranda Yok";
         statusElement.className = "success";
         
         // Simulate loading before redirect
