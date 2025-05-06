@@ -195,17 +195,29 @@
     
     /* Background pattern */
     .bg-pattern {
+     .bg-pattern {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      opacity: 0.1;
       z-index: 1;
-      background-image: url('logo/PEMKAB-SUKOHARJO-01.png');
-      background-size: 150px;
-      background-repeat: repeat;
+      background-image: url('https://img.freepik.com/free-vector/hand-drawn-trees-collection_23-2147757152.jpg');
+      background-size: 60%; /* Ukuran gambar lebih besar */
+      background-repeat: no-repeat;
+      background-position: center;
       background-attachment: fixed;
+      opacity: 0.15; /* Lebih transparan */
+      filter: grayscale(100%) sepia(50%) hue-rotate(60deg); /* Efek hijau natural */
+    }
+
+    /* Untuk mobile, ukuran gambar disesuaikan */
+    @media (max-width: 768px) {
+      .bg-pattern {
+        background-size: 90%;
+        opacity: 0.1;
+      }
+    }
     }
     
     /* Responsive adjustments */
