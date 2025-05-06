@@ -428,14 +428,11 @@
 
       fetch("https://script.google.com/macros/s/AKfycbysgooivwa9TchQCIXRhkJJ0Al3BSgtzzxjq5C2hGA4F8gJjYcJI4OwHy7Hv371zVW3/exec", {
         method: "POST",
-        body: JSON.stringify(formData),
-  headers: {
-    "Content-Type": "application/json",
-  },
-})
-.then(res => res.text())
-.then(result => alert("Data berhasil dikirim!"))
-.catch(error => alert("Terjadi kesalahan: " + error));
+        body: JSON.stringify(formdata),
+      })
+      .then(res => res.text())
+      .then(() => {
+        alert("Data berhasil dikirim!");
         fetchData(); // Memperbarui data tanpa reload halaman
         // Reset form
         document.getElementById("tanggal").value = "";
