@@ -338,7 +338,7 @@
 
   <!-- Script -->
   <script>
-    const url = "https://script.google.com/macros/s/AKfycbz_myJKHjG37K5_L-yr5Q73j2nnEoP3SLj4Pk6Mc-lGFN4ZptDLezZ04Y_rKFuAMhawhg/exec";
+    const url = "https://script.google.com/macros/s/AKfycbzL140haoPpQoP04a_mH8i3lhsTdu6tXFxvXykK-7bxm62-zkUukSm1nVYsMF824UrzlQ/exec";
 
     // Fungsi untuk menambah input barang
     function tambahBarang() {
@@ -426,9 +426,9 @@
       button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Mengirim...';
       button.disabled = true;
 
-      fetch(url, {
+      fetch("https://script.google.com/macros/s/AKfycbzL140haoPpQoP04a_mH8i3lhsTdu6tXFxvXykK-7bxm62-zkUukSm1nVYsMF824UrzlQ/exec", {
         method: "POST",
-        body: JSON.stringify(data),
+        body: JSON.stringify(formdata),
       })
       .then(res => res.text())
       .then(() => {
