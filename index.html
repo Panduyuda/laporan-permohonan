@@ -54,6 +54,12 @@
       font-size: 1.5rem;
       letter-spacing: 1px;
     }
+    .action-btn {
+      transition: all 0.2s ease;
+    }
+    .action-btn:hover {
+      transform: scale(1.1);
+    }
   </style>
 </head>
 <body>
@@ -121,7 +127,7 @@
           </div>
         </div>
         <div class="mt-6 flex justify-end">
-          <button onclick="submitData()" class="btn-primary text-white px-6 py-2 rounded-lg font-medium flex items-center">
+          <button onclick="submitData()" class="btn-hijau text-white px-6 py-2 rounded-lg font-medium flex items-center">
             <i class="fas fa-paper-plane mr-2"></i> Kirim Permohonan
           </button>
         </div>
@@ -291,6 +297,7 @@
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Alamat</th>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keterangan</th>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Realisasi</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
               </tr>
             </thead>
             <tbody id="dataTable" class="bg-white divide-y divide-gray-200">
@@ -358,6 +365,7 @@
     // Panggil fungsi tambahBarang() saat halaman dimuat untuk menampilkan satu input default
     document.addEventListener('DOMContentLoaded', function() {
       tambahBarang();
+      fetchData(); // Memuat data saat halaman pertama kali dibuka
     });
 
     function submitData() {
@@ -402,13 +410,14 @@
       });
 
       const data = {
+        action: "create",
         tanggal: tanggal.value,
         noSurat: noSurat.value,
         pemohon: pemohon.value,
         alamat: alamat.value,
         barang: JSON.stringify(barangData),
         keterangan: barangData.map(b => `${b.jenis} (${b.jumlah} buah)`).join(", "),
-        realisasi: document.getElementById("realisasi").value,
+        realisasi: document.getElementById("realisasi").value || "Belum",
       };
 
       // Show loading state
@@ -423,10 +432,20 @@
       .then(res => res.text())
       .then(() => {
         alert("Data berhasil dikirim!");
-        location.reload();
+        fetchData(); // Memperbarui data tanpa reload halaman
+        // Reset form
+        document.getElementById("tanggal").value = "";
+        document.getElementById("noSurat").value = "";
+        document.getElementById("pemohon").value = "";
+        document.getElementById("alamat").value = "";
+        document.getElementById("realisasi").value = "";
+        document.getElementById("barangContainer").innerHTML = "";
+        tambahBarang(); // Tambahkan input barang default
       })
       .catch(() => {
         alert("Terjadi kesalahan saat mengirim data.");
+      })
+      .finally(() => {
         button.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Kirim Permohonan';
         button.disabled = false;
       });
@@ -453,64 +472,114 @@
       return status;
     }
 
-    fetch(url)
-      .then(res => res.json())
-      .then(data => {
-        const table = document.getElementById("dataTable");
-        let total = 0, sudah = 0, belum = 0;
+    // Fungsi untuk memperbarui status realisasi
+    function updateRealisasi(id, status) {
+      if (!confirm(`Apakah Anda yakin ingin mengubah status realisasi menjadi '${status}'?`)) {
+        return;
+      }
 
-        // Clear existing data
-        table.innerHTML = '';
+      const button = event.target.closest('button');
+      const originalHTML = button.innerHTML;
+      button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+      
+      fetch(url, {
+        method: "POST",
+        body: JSON.stringify({
+          action: "update",
+          id: id,
+          realisasi: status
+        }),
+      })
+      .then(res => res.text())
+      .then(() => {
+        alert("Status berhasil diperbarui!");
+        fetchData(); // Memperbarui data setelah perubahan
+      })
+      .catch(() => {
+        alert("Gagal memperbarui status.");
+        button.innerHTML = originalHTML;
+      });
+    }
 
-        if (data.length === 0) {
-          const row = document.createElement("tr");
-          row.innerHTML = `
-            <td colspan="6" class="px-6 py-4 text-center text-gray-500">
-              Belum ada data permohonan
-            </td>
-          `;
-          table.appendChild(row);
-        } else {
-          data.forEach(item => {
+    // Fungsi untuk memuat data
+    function fetchData() {
+      fetch(url)
+        .then(res => res.json())
+        .then(data => {
+          const table = document.getElementById("dataTable");
+          let total = 0, sudah = 0, belum = 0;
+
+          // Clear existing data
+          table.innerHTML = '';
+
+          if (data.length === 0) {
             const row = document.createElement("tr");
-            row.className = "hover:bg-gray-50";
             row.innerHTML = `
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formatDate(item.tanggal)}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${item.noSurat || '-'}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.pemohon || '-'}</td>
-              <td class="px-6 py-4 text-sm text-gray-500">${item.alamat || '-'}</td>
-              <td class="px-6 py-4 text-sm text-gray-500">
-                ${item.keterangan || '-'}
-                ${item.barang ? '<div class="text-xs text-gray-400 mt-1">' + 
-                   JSON.parse(item.barang).map(b => `${b.jenis}: ${b.jumlah}`).join(', ') + 
-                   '</div>' : ''}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                ${getStatusBadge(item.realisasi)}
+              <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+                Belum ada data permohonan
               </td>
             `;
             table.appendChild(row);
-            total++;
-            if (item.realisasi && item.realisasi.toLowerCase() === "sudah") sudah++;
-            else belum++;
-          });
-        }
+          } else {
+            data.forEach(item => {
+              const row = document.createElement("tr");
+              row.className = "hover:bg-gray-50";
+              row.innerHTML = `
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formatDate(item.tanggal)}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${item.noSurat || '-'}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.pemohon || '-'}</td>
+                <td class="px-6 py-4 text-sm text-gray-500">${item.alamat || '-'}</td>
+                <td class="px-6 py-4 text-sm text-gray-500">
+                  ${item.keterangan || '-'}
+                  ${item.barang ? '<div class="text-xs text-gray-400 mt-1">' + 
+                     JSON.parse(item.barang).map(b => `${b.jenis}: ${b.jumlah}`).join(', ') + 
+                     '</div>' : ''}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  ${getStatusBadge(item.realisasi)}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <div class="flex space-x-2">
+                    <button onclick="updateRealisasi('${item.id}', 'Sudah')" 
+                      class="action-btn text-green-600 hover:text-green-900" title="Sudah Direalisasi">
+                      <i class="fas fa-check-circle"></i>
+                    </button>
+                    <button onclick="updateRealisasi('${item.id}', 'Belum')" 
+                      class="action-btn text-yellow-600 hover:text-yellow-900" title="Belum Direalisasi">
+                      <i class="fas fa-clock"></i>
+                    </button>
+                    <button onclick="updateRealisasi('${item.id}', 'TL')" 
+                      class="action-btn text-red-600 hover:text-red-900" title="Tindak Lanjut">
+                      <i class="fas fa-times-circle"></i>
+                    </button>
+                  </div>
+                </td>
+              `;
+              table.appendChild(row);
+              
+              // Hitung statistik
+              total++;
+              if (item.realisasi && item.realisasi.toLowerCase() === "sudah") sudah++;
+              else belum++;
+            });
+          }
 
-        document.getElementById("totalData").textContent = total;
-        document.getElementById("sudahData").textContent = sudah;
-        document.getElementById("belumData").textContent = belum;
-      })
-      .catch(error => {
-        console.error("Error fetching data:", error);
-        const table = document.getElementById("dataTable");
-        table.innerHTML = `
-          <tr>
-            <td colspan="6" class="px-6 py-4 text-center text-red-500">
-              Gagal memuat data. Silakan coba lagi nanti.
-            </td>
-          </tr>
-        `;
-      });
+          document.getElementById("totalData").textContent = total;
+          document.getElementById("sudahData").textContent = sudah;
+          document.getElementById("belumData").textContent = belum;
+        })
+        .catch(error => {
+          console.error("Error fetching data:", error);
+          const table = document.getElementById("dataTable");
+          table.innerHTML = `
+            <tr>
+              <td colspan="7" class="px-6 py-4 text-center text-red-500">
+                Gagal memuat data. Silakan coba lagi nanti.
+              </td>
+            </tr>
+          `;
+        });
+    }
   </script>
 </body>
 </html>
