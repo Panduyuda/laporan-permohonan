@@ -32,9 +32,7 @@
       color: var(--text);
       position: relative;
       overflow: hidden;
-      background-img src="logo/PEMKAB-SUKOHARJO-01.png" alt="Logo Kabupaten" class="h-[150px] max-w-[150px] w-auto">
-      background-size: 100px 100px;
-      background-attachment: fixed;
+      background-color: #f0fdf4;
     }
     
     .login-container {
@@ -45,6 +43,7 @@
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
       overflow: hidden;
       animation: fadeIn 0.6s ease-out;
+      z-index: 2;
     }
     
     .login-header {
@@ -194,6 +193,21 @@
       }
     }
     
+    /* Background pattern */
+    .bg-pattern {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.1;
+      z-index: 1;
+      background-image: url('logo/PEMKAB-SUKOHARJO-01.png');
+      background-size: 150px;
+      background-repeat: repeat;
+      background-attachment: fixed;
+    }
+    
     /* Responsive adjustments */
     @media (max-width: 480px) {
       .login-container {
@@ -217,11 +231,11 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
+  <div class="bg-pattern"></div>
   <div class="login-container">
     <div class="login-header">
       <div class="logo">
-        <!-- Replace with your image path -->
-        <img mg src="logo/Logo-01.png" alt="Logo Bidang" class="h-[150px] max-w-[150px] w-auto"">
+        <img src="logo/Logo-01.png" alt="Logo DLH Sukoharjo">
       </div>
       <h2>Selamat Datang</h2>
       <p>Sistem Laporan Permohonan Bantuan</p>
@@ -230,12 +244,12 @@
     <form id="loginForm" class="login-form">
       <div class="form-group">
         <label for="username">Username</label>
-        <input type="text" id="username" class="form-control" placeholder="Tulis Username Boskuu" required>
+        <input type="text" id="username" class="form-control" placeholder="Masukkan username" required>
       </div>
       
       <div class="form-group">
         <label for="password">Password</label>
-        <input type="password" id="password" class="form-control" placeholder="********" required>
+        <input type="password" id="password" class="form-control" placeholder="Masukkan password" required>
       </div>
       
       <button type="submit" class="btn">
@@ -252,39 +266,47 @@
   </div>
 
   <script>
-    const USERNAME = "DLHSUKOHARJO";
-    const PASSWORD = "123456";
+    // Data login yang valid
+    const VALID_CREDENTIALS = {
+      username: "DLHSUKOHARJO",
+      password: "123456"
+    };
 
     document.getElementById("loginForm").addEventListener("submit", function(e) {
       e.preventDefault();
-      const user = document.getElementById("username").value.trim();
-      const pass = document.getElementById("password").value;
+      
+      const usernameInput = document.getElementById("username").value.trim();
+      const passwordInput = document.getElementById("password").value;
       const statusElement = document.getElementById("loginStatus");
-
-      if (user === USERNAME && pass === PASSWORD) {
-        statusElement.innerText = "Login berhasil! Langsung Ke Beranda Yok";
+      
+      // Validasi login
+      if (usernameInput === VALID_CREDENTIALS.username && passwordInput === VALID_CREDENTIALS.password) {
+        statusElement.textContent = "Login berhasil! Mengarahkan ke beranda...";
         statusElement.className = "success";
+        statusElement.style.display = "block";
         
-        // Simulate loading before redirect
+        // Redirect setelah 1.5 detik
         setTimeout(() => {
-          window.location.href = "index.html";
+          // Pastikan file index.html ada di direktori yang sama
+          window.location.href = "index.html"; 
+          
+          // Jika tidak berhasil, coba dengan path lengkap:
+          // window.location.href = window.location.pathname.replace('login.html', 'index.html');
         }, 1500);
       } else {
-        statusElement.innerText = "Username atau password salah. Silakan coba lagi.";
+        statusElement.textContent = "Username atau password salah. Silakan coba lagi.";
         statusElement.className = "error";
+        statusElement.style.display = "block";
         
-        // Shake animation for error
+        // Animasi shake saat error
         this.style.animation = "shake 0.5s";
         setTimeout(() => {
           this.style.animation = "";
         }, 500);
       }
-      
-      // Always show status message
-      statusElement.style.display = "block";
     });
 
-    // Add shake animation dynamically
+    // Tambahkan animasi shake
     const style = document.createElement('style');
     style.textContent = `
       @keyframes shake {
