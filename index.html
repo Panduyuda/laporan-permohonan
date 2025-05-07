@@ -137,96 +137,64 @@
   </div>
 
   <div class="container mx-auto p-4 md:p-6">
-  <!-- Ubah bagian form input menjadi seperti ini -->
-<div class="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
-  <div class="bg-green-600 px-6 py-3">
-    <h2 class="text-xl font-bold text-white">Laporan Permohonan Bantuan</h2>
-  </div>
-  
-  <div class="p-6 space-y-4">
-    <!-- Tanggal -->
-    <div>
-      <label for="tanggal" class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
-      <input type="text" id="tanggal" class="w-full px-4 py-2 border border-gray-300 rounded-lg" 
-             placeholder="DD-MMM-YYYY" pattern="\d{2}-[A-Za-z]{3}-\d{4}">
-    </div>
-    
-    <!-- Nomor Surat -->
-    <div>
-      <label for="noSurat" class="block text-sm font-medium text-gray-700 mb-1">Nomor Surat</label>
-      <input type="text" id="noSurat" class="w-full px-4 py-2 border border-gray-300 rounded-lg" 
-             placeholder="Contoh: 04/BSD/III/2025">
-    </div>
-    
-    <!-- Nama Pemohon -->
-    <div>
-      <label for="pemohon" class="block text-sm font-medium text-gray-700 mb-1">Nama Pemohon/Instansi</label>
-      <input type="text" id="pemohon" class="w-full px-4 py-2 border border-gray-300 rounded-lg" 
-             placeholder="Nama lengkap pemohon">
-    </div>
-    
-    <!-- Alamat -->
-    <div>
-      <label for="alamat" class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
-      <textarea id="alamat" class="w-full px-4 py-2 border border-gray-300 rounded-lg" rows="2"></textarea>
-    </div>
-    
-    <!-- Keterangan Permohonan -->
-    <div>
-      <label class="block text-sm font-medium text-gray-700 mb-1">Keterangan Permohonan</label>
-      <select class="w-full px-4 py-2 border border-gray-300 rounded-lg">
-        <option value="">Pilih Jenis Barang</option>
-        <option value="Timbangan">Timbangan</option>
-        <option value="Komposter">Komposter</option>
-        <option value="Gerobak">Gerobak Sampah</option>
-      </select>
-    </div>
-    
-    <!-- Status Realisasi -->
-    <div>
-      <label class="block text-sm font-medium text-gray-700 mb-2">Status Realisasi</label>
-      <div class="space-y-2">
-        <label class="flex items-center">
-          <input type="radio" name="realisasi" value="Sudah" class="mr-2">
-          <span>Sudah Direalisasi</span>
-        </label>
-        <label class="flex items-center">
-          <input type="radio" name="realisasi" value="Belum" class="mr-2">
-          <span>Belum Direalisasi</span>
-        </label>
-        <label class="flex items-center">
-          <input type="radio" name="realisasi" value="TL" class="mr-2">
-          <span>Tindak Lanjut</span>
-        </label>
+    <!-- Form Section - Updated to match your image layout -->
+    <div class="form-section mb-8">
+      <div class="form-header">
+        <h2 class="text-xl font-bold">Laporan Permohonan Bantuan</h2>
       </div>
-    </div>
-    
-    <!-- Tombol Submit -->
-    <div class="pt-4">
-      <button onclick="submitData()" class="btn-hijau text-white px-6 py-2 rounded-lg font-medium w-full">
-        <i class="fas fa-paper-plane mr-2"></i> Kirim Permohonan
-      </button>
-    </div>
-  </div>
-</div>
+      
+      <div class="p-6">
+        <!-- Tanggal dan Nomor Surat -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div class="form-group">
+            <label for="tanggal" class="form-label">Tanggal</label>
+            <input type="date" id="tanggal" class="form-input">
+          </div>
+          <div class="form-group">
+            <label for="noSurat" class="form-label">Nomor Surat</label>
+            <input type="text" id="noSurat" class="form-input" placeholder="Masukkan nomor surat">
+          </div>
+        </div>
 
-<!-- Tambahkan script ini untuk format tanggal -->
-<script>
-// Format tanggal otomatis
-document.getElementById('tanggal').addEventListener('input', function(e) {
-  // Implementasi format tanggal DD-MMM-YYYY
-  // ... kode untuk formatting ...
-});
+        <!-- Pemohon dan Alamat -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div class="form-group">
+            <label for="pemohon" class="form-label">Nama Pemohon/Instansi</label>
+            <input type="text" id="pemohon" class="form-input" placeholder="Nama lengkap pemohon">
+          </div>
+          <div class="form-group">
+            <label for="alamat" class="form-label">Alamat</label>
+            <input type="text" id="alamat" class="form-input" placeholder="Alamat lengkap">
+          </div>
+        </div>
 
-// Fungsi submit yang disesuaikan
-function submitData() {
-  // Ambil nilai dari input radio
-  const realisasi = document.querySelector('input[name="realisasi"]:checked')?.value || '';
-  
-  // Validasi dan proses submit
-  // ... kode submit ...
-}
-</script>
+        <!-- Keterangan Permohonan -->
+        <div class="mb-6">
+          <label class="form-label">Keterangan Permohonan</label>
+          <div id="barangContainer" class="space-y-4">
+            <!-- Barang akan ditambahkan dinamis di sini -->
+          </div>
+          <button type="button" onclick="tambahBarang()" class="mt-2 text-sm text-green-600 hover:text-green-800 flex items-center">
+            <i class="fas fa-plus-circle mr-1"></i> Tambah Barang
+          </button>
+        </div>
+
+        <!-- Status Realisasi -->
+        <div class="mb-6">
+          <label for="realisasi" class="form-label">Status Realisasi</label>
+          <select id="realisasi" class="form-input">
+            <option value="">Pilih status realisasi</option>
+            <option value="Sudah">Sudah Direalisasi</option>
+            <option value="Belum">Belum Direalisasi</option>
+            <option value="TL">Tindak Lanjut</option>
+          </select>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="flex justify-end">
+          <button onclick="submitData()" class="btn-hijau text-white px-6 py-2 rounded-lg font-medium flex items-center">
+            <i class="fas fa-paper-plane mr-2"></i> Kirim Permohonan
+          </button>
         </div>
       </div>
     </div>
