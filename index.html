@@ -60,6 +60,26 @@
     .action-btn:hover {
       transform: scale(1.1);
     }
+    @media (max-width: 640px) {
+      .header-content {
+        padding-top: 80px;
+      }
+      .logo-kiri, .logo-kanan {
+        position: static;
+        text-align: center;
+        margin: 10px auto;
+        display: block;
+      }
+      .title-main {
+        font-size: 1.8rem;
+      }
+      .title-sub {
+        font-size: 1.4rem;
+      }
+      .title-system {
+        font-size: 1.2rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -72,7 +92,7 @@
     
     <!-- Logo Bidang (Pojok Kanan) -->
     <div class="logo-kanan">
-      <img src="logo/Logo-01.png" alt="Logo Bidang" class="h-[150px] max-w-[150px] w-auto"">
+      <img src="logo/Logo-01.png" alt="Logo Bidang" class="h-[150px] max-w-[150px] w-auto">
     </div>
     
     <!-- Judul Tengah -->
@@ -82,7 +102,9 @@
       <p class="title-system font-medium italic">Sistem Laporan Permohonan Bantuan</p>
     </div>
   </div>
+
   <div class="container mx-auto p-4 md:p-6">
+    <!-- Form Section -->
     <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
       <div class="bg-green-600 px-6 py-3">
         <h2 class="text-xl font-bold text-white">Laporan Permohonan Bantuan</h2>
@@ -161,8 +183,35 @@
       </div>
     </template>
 
+    <!-- Search and Filter Section -->
+    <div class="bg-white rounded-xl shadow-md overflow-hidden mb-6 p-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label for="searchInput" class="block text-sm font-medium text-gray-700 mb-1">Cari</label>
+          <input type="text" id="searchInput" placeholder="Cari pemohon/alamat..." 
+                 class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+        </div>
+        <div>
+          <label for="dateFrom" class="block text-sm font-medium text-gray-700 mb-1">Dari Tanggal</label>
+          <input type="date" id="dateFrom" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+        </div>
+        <div>
+          <label for="dateTo" class="block text-sm font-medium text-gray-700 mb-1">Sampai Tanggal</label>
+          <input type="date" id="dateTo" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+        </div>
+      </div>
+      <div class="mt-4 flex justify-between">
+        <button onclick="resetFilters()" class="text-gray-600 hover:text-gray-800 flex items-center">
+          <i class="fas fa-sync-alt mr-1"></i> Reset Filter
+        </button>
+        <button onclick="applyFilters()" class="btn-hijau text-white px-4 py-2 rounded-lg font-medium flex items-center">
+          <i class="fas fa-filter mr-2"></i> Terapkan Filter
+        </button>
+      </div>
+    </div>
+
     <!-- Statistik -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 my-8">
       <div class="stat-card bg-white rounded-xl shadow-md overflow-hidden border-l-4 border-green-500">
         <div class="p-6">
           <div class="flex items-center">
@@ -196,9 +245,77 @@
               <i class="fas fa-clock text-lg"></i>
             </div>
             <div>
-              <h3 class="text-lg font-semibold text-gray-700">Belum/TL</h3>
+              <h3 class="text-lg font-semibold text-gray-700">Belum Direalisasi</h3>
               <p class="text-2xl font-bold text-gray-900" id="belumData">0</p>
             </div>
+          </div>
+        </div>
+      </div>
+      <div class="stat-card bg-white rounded-xl shadow-md overflow-hidden border-l-4 border-red-500">
+        <div class="p-6">
+          <div class="flex items-center">
+            <div class="p-3 rounded-full bg-red-100 text-red-600 mr-4">
+              <i class="fas fa-times-circle text-lg"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold text-gray-700">Tindak Lanjut</h3>
+              <p class="text-2xl font-bold text-gray-900" id="tlData">0</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Export Button -->
+    <div class="flex justify-end mb-4">
+      <button onclick="exportData()" class="bg-white border border-green-500 text-green-500 hover:bg-green-50 px-4 py-2 rounded-lg font-medium flex items-center">
+        <i class="fas fa-file-export mr-2"></i> Export Data
+      </button>
+    </div>
+
+    <!-- Tabel Data -->
+    <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8">
+      <div class="bg-green-600 px-6 py-3 flex justify-between items-center">
+        <h2 class="text-xl font-bold text-white flex items-center">
+          <i class="fas fa-table mr-2"></i> Data Permohonan Bantuan
+        </h2>
+        <div class="text-white text-sm" id="dataCount">Menampilkan 0 data</div>
+      </div>
+      <div class="p-6">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No Surat</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pemohon</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Alamat</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keterangan</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Realisasi</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="dataTable" class="bg-white divide-y divide-gray-200">
+              <!-- Data will be inserted here -->
+              <tr>
+                <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+                  <div class="flex justify-center">
+                    <i class="fas fa-spinner fa-spin text-2xl text-green-500"></i>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="mt-4 flex justify-between items-center">
+          <div class="text-sm text-gray-500" id="paginationInfo"></div>
+          <div class="flex space-x-2">
+            <button id="prevPage" onclick="changePage(-1)" disabled class="px-3 py-1 border border-gray-300 rounded text-gray-500 bg-white disabled:opacity-50">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <button id="nextPage" onclick="changePage(1)" disabled class="px-3 py-1 border border-gray-300 rounded text-gray-500 bg-white disabled:opacity-50">
+              <i class="fas fa-chevron-right"></i>
+            </button>
           </div>
         </div>
       </div>
@@ -207,37 +324,37 @@
     <!-- Info Boxes -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
       <!-- Edukasi -->
-   <div class="bg-white rounded-xl shadow-md overflow-hidden">
-   <div class="bg-blue-600 px-6 py-3">
-      <h2 class="text-xl font-bold text-white flex items-center">
-      <i class="fas fa-tools mr-2"></i> Tips Pengelolaan Sarana Prasarana
-    </h2>
-  </div>
-  <div class="p-6">
-    <ul class="space-y-3">
-      <li class="flex items-start">
-        <i class="fas fa-calendar-check text-blue-500 mt-1 mr-3"></i>
-        <span>Lakukan pemeliharaan rutin pada sarana dan prasarana yang ada</span>
-      </li>
-      <li class="flex items-start">
-        <i class="fas fa-bolt text-blue-500 mt-1 mr-3"></i>
-        <span>Optimalkan penggunaan fasilitas untuk efisiensi energi dan sumber daya</span>
-      </li>
-      <li class="flex items-start">
-        <i class="fas fa-microchip text-blue-500 mt-1 mr-3"></i>
-        <span>Manfaatkan teknologi terkini untuk meningkatkan kinerja sarana prasarana</span>
-      </li>
-      <li class="flex items-start">
-        <i class="fas fa-clipboard-list text-blue-500 mt-1 mr-3"></i>
-        <span>Lakukan inventarisasi berkala untuk mencatat kondisi aset</span>
-      </li>
-      <li class="flex items-start">
-        <i class="fas fa-exclamation-triangle text-blue-500 mt-1 mr-3"></i>
-        <span>Sediakan sistem pelaporan kerusakan untuk perbaikan cepat</span>
-      </li>
-    </ul>
-  </div>
-</div>
+      <div class="bg-white rounded-xl shadow-md overflow-hidden">
+        <div class="bg-blue-600 px-6 py-3">
+          <h2 class="text-xl font-bold text-white flex items-center">
+            <i class="fas fa-tools mr-2"></i> Tips Pengelolaan Sarana Prasarana
+          </h2>
+        </div>
+        <div class="p-6">
+          <ul class="space-y-3">
+            <li class="flex items-start">
+              <i class="fas fa-calendar-check text-blue-500 mt-1 mr-3"></i>
+              <span>Lakukan pemeliharaan rutin pada sarana dan prasarana yang ada</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-bolt text-blue-500 mt-1 mr-3"></i>
+              <span>Optimalkan penggunaan fasilitas untuk efisiensi energi dan sumber daya</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-microchip text-blue-500 mt-1 mr-3"></i>
+              <span>Manfaatkan teknologi terkini untuk meningkatkan kinerja sarana prasarana</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-clipboard-list text-blue-500 mt-1 mr-3"></i>
+              <span>Lakukan inventarisasi berkala untuk mencatat kondisi aset</span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-exclamation-triangle text-blue-500 mt-1 mr-3"></i>
+              <span>Sediakan sistem pelaporan kerusakan untuk perbaikan cepat</span>
+            </li>
+          </ul>
+        </div>
+      </div>
 
       <!-- Kontak -->
       <div class="bg-white rounded-xl shadow-md overflow-hidden">
@@ -279,35 +396,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Tabel Data -->
-    <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8">
-      <div class="bg-green-600 px-6 py-3">
-        <h2 class="text-xl font-bold text-white flex items-center">
-          <i class="fas fa-table mr-2"></i> Data Permohonan Bantuan
-        </h2>
-      </div>
-      <div class="p-6">
-        <div class="overflow-x-auto">
-          <table class="min-w-full divide-y divide-gray-200">
-            <thead class="bg-gray-50">
-              <tr>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No Surat</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pemohon</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Alamat</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keterangan</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Realisasi</th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="dataTable" class="bg-white divide-y divide-gray-200">
-              <!-- Data will be inserted here -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
   </div>
 
   <!-- Footer -->
@@ -338,7 +426,11 @@
 
   <!-- Script -->
   <script>
-    const url ="https://script.google.com/macros/s/AKfycbyPMLG9LJ8wsMQqEGIJit6ZJlD36JSSdIevp1Gv_nJg7Vd_FIESgzFbWX4iAD_3mtJW/exec";
+    const url = "https://script.google.com/macros/s/AKfycbyPMLG9LJ8wsMQqEGIJit6ZJlD36JSSdIevp1Gv_nJg7Vd_FIESgzFbWX4iAD_3mtJW/exec";
+    let allData = [];
+    let filteredData = [];
+    let currentPage = 1;
+    const itemsPerPage = 10;
 
     // Fungsi untuk menambah input barang
     function tambahBarang() {
@@ -363,95 +455,6 @@
       button.closest('.barang-item').remove();
     }
 
-    // Panggil fungsi tambahBarang() saat halaman dimuat untuk menampilkan satu input default
-    document.addEventListener('DOMContentLoaded', function() {
-      tambahBarang();
-      fetchData(); // Memuat data saat halaman pertama kali dibuka
-    });
-
-    function submitData() {
-      const tanggal = document.getElementById("tanggal");
-      const noSurat = document.getElementById("noSurat");
-      const pemohon = document.getElementById("pemohon");
-      const alamat = document.getElementById("alamat");
-      
-      // Simple validation
-      if (!tanggal.value || !noSurat.value || !pemohon.value || !alamat.value) {
-        alert("Harap lengkapi semua data permohonan!");
-        return;
-      }
-
-      // Kumpulkan data barang
-      const barangItems = document.querySelectorAll('.barang-item');
-      const barangData = [];
-      
-      barangItems.forEach(item => {
-        const jenis = item.querySelector('.jenis-barang').value;
-        const jumlah = item.querySelector('.jumlah-barang').value;
-        
-        if (!jenis || !jumlah) {
-          alert("Harap lengkapi semua data barang!");
-          throw new Error("Data barang tidak lengkap");
-        }
-        
-        let keteranganBarang = jenis;
-        if (jenis === 'Lainnya') {
-          const catatan = item.querySelector('.catatan-lainnya').value;
-          if (!catatan) {
-            alert("Harap isi keterangan untuk barang 'Lainnya'!");
-            throw new Error("Catatan barang lainnya kosong");
-          }
-          keteranganBarang = catatan;
-        }
-        
-        barangData.push({
-          jenis: keteranganBarang,
-          jumlah: parseInt(jumlah)
-        });
-      });
-
-      const data = {
-        action: "create",
-        tanggal: tanggal.value,
-        noSurat: noSurat.value,
-        pemohon: pemohon.value,
-        alamat: alamat.value,
-        barang: JSON.stringify(barangData),
-        keterangan: barangData.map(b => `${b.jenis} (${b.jumlah} buah)`).join(", "),
-        realisasi: document.getElementById("realisasi").value || "Belum",
-      };
-
-      // Show loading state
-      const button = document.querySelector('button[onclick="submitData()"]');
-      button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Mengirim...';
-      button.disabled = true;
-
-      fetch("https://script.google.com/macros/s/AKfycbyPMLG9LJ8wsMQqEGIJit6ZJlD36JSSdIevp1Gv_nJg7Vd_FIESgzFbWX4iAD_3mtJW/exec", {
-        method: "POST",
-        body: JSON.stringify(formdata),
-      })
-      .then(res => res.text())
-      .then(() => {
-        alert("Data berhasil dikirim!");
-        fetchData(); // Memperbarui data tanpa reload halaman
-        // Reset form
-        document.getElementById("tanggal").value = "";
-        document.getElementById("noSurat").value = "";
-        document.getElementById("pemohon").value = "";
-        document.getElementById("alamat").value = "";
-        document.getElementById("realisasi").value = "";
-        document.getElementById("barangContainer").innerHTML = "";
-        tambahBarang(); // Tambahkan input barang default
-      })
-      .catch(() => {
-        alert("Terjadi kesalahan saat mengirim data.");
-      })
-      .finally(() => {
-        button.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Kirim Permohonan';
-        button.disabled = false;
-      });
-    }
-
     // Format date to local Indonesian format
     function formatDate(dateString) {
       if (!dateString) return '-';
@@ -471,6 +474,91 @@
         return '<span class="px-2 py-1 text-xs font-semibold rounded bg-red-100 text-red-800">TL</span>';
       }
       return status;
+    }
+
+    function submitData() {
+      const tanggal = document.getElementById("tanggal");
+      const noSurat = document.getElementById("noSurat");
+      const pemohon = document.getElementById("pemohon");
+      const alamat = document.getElementById("alamat");
+      
+      // Validation
+      if (!tanggal.value || !noSurat.value || !pemohon.value || !alamat.value) {
+        alert("Harap lengkapi semua data permohonan!");
+        return;
+      }
+
+      // Collect item data
+      const barangItems = document.querySelectorAll('.barang-item');
+      const barangData = [];
+      
+      try {
+        barangItems.forEach(item => {
+          const jenis = item.querySelector('.jenis-barang').value;
+          const jumlah = item.querySelector('.jumlah-barang').value;
+          
+          if (!jenis || !jumlah) {
+            throw new Error("Harap lengkapi semua data barang!");
+          }
+          
+          let keteranganBarang = jenis;
+          if (jenis === 'Lainnya') {
+            const catatan = item.querySelector('.catatan-lainnya').value;
+            if (!catatan) {
+              throw new Error("Harap isi keterangan untuk barang 'Lainnya'!");
+            }
+            keteranganBarang = catatan;
+          }
+          
+          barangData.push({
+            jenis: keteranganBarang,
+            jumlah: parseInt(jumlah)
+          });
+        });
+
+        const data = {
+          action: "create",
+          tanggal: tanggal.value,
+          noSurat: noSurat.value,
+          pemohon: pemohon.value,
+          alamat: alamat.value,
+          barang: JSON.stringify(barangData),
+          keterangan: barangData.map(b => `${b.jenis} (${b.jumlah} buah)`).join(", "),
+          realisasi: document.getElementById("realisasi").value || "Belum",
+        };
+
+        // Show loading state
+        const button = document.querySelector('button[onclick="submitData()"]');
+        button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Mengirim...';
+        button.disabled = true;
+
+        fetch(url, {
+          method: "POST",
+          body: JSON.stringify(data),
+        })
+        .then(res => res.text())
+        .then(() => {
+          alert("Data berhasil dikirim!");
+          fetchData();
+          // Reset form
+          document.getElementById("tanggal").value = "";
+          document.getElementById("noSurat").value = "";
+          document.getElementById("pemohon").value = "";
+          document.getElementById("alamat").value = "";
+          document.getElementById("realisasi").value = "";
+          document.getElementById("barangContainer").innerHTML = "";
+          tambahBarang();
+        })
+        .catch((error) => {
+          alert(`Terjadi kesalahan: ${error.message}`);
+        })
+        .finally(() => {
+          button.innerHTML = '<i class="fas fa-paper-plane mr-2"></i> Kirim Permohonan';
+          button.disabled = false;
+        });
+      } catch (error) {
+        alert(error.message);
+      }
     }
 
     // Fungsi untuk memperbarui status realisasi
@@ -507,67 +595,10 @@
       fetch(url)
         .then(res => res.json())
         .then(data => {
-          const table = document.getElementById("dataTable");
-          let total = 0, sudah = 0, belum = 0;
-
-          // Clear existing data
-          table.innerHTML = '';
-
-          if (data.length === 0) {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-              <td colspan="7" class="px-6 py-4 text-center text-gray-500">
-                Belum ada data permohonan
-              </td>
-            `;
-            table.appendChild(row);
-          } else {
-            data.forEach(item => {
-              const row = document.createElement("tr");
-              row.className = "hover:bg-gray-50";
-              row.innerHTML = `
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formatDate(item.tanggal)}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${item.noSurat || '-'}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.pemohon || '-'}</td>
-                <td class="px-6 py-4 text-sm text-gray-500">${item.alamat || '-'}</td>
-                <td class="px-6 py-4 text-sm text-gray-500">
-                  ${item.keterangan || '-'}
-                  ${item.barang ? '<div class="text-xs text-gray-400 mt-1">' + 
-                     JSON.parse(item.barang).map(b => `${b.jenis}: ${b.jumlah}`).join(', ') + 
-                     '</div>' : ''}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  ${getStatusBadge(item.realisasi)}
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  <div class="flex space-x-2">
-                    <button onclick="updateRealisasi('${item.id}', 'Sudah')" 
-                      class="action-btn text-green-600 hover:text-green-900" title="Sudah Direalisasi">
-                      <i class="fas fa-check-circle"></i>
-                    </button>
-                    <button onclick="updateRealisasi('${item.id}', 'Belum')" 
-                      class="action-btn text-yellow-600 hover:text-yellow-900" title="Belum Direalisasi">
-                      <i class="fas fa-clock"></i>
-                    </button>
-                    <button onclick="updateRealisasi('${item.id}', 'TL')" 
-                      class="action-btn text-red-600 hover:text-red-900" title="Tindak Lanjut">
-                      <i class="fas fa-times-circle"></i>
-                    </button>
-                  </div>
-                </td>
-              `;
-              table.appendChild(row);
-              
-              // Hitung statistik
-              total++;
-              if (item.realisasi && item.realisasi.toLowerCase() === "sudah") sudah++;
-              else belum++;
-            });
-          }
-
-          document.getElementById("totalData").textContent = total;
-          document.getElementById("sudahData").textContent = sudah;
-          document.getElementById("belumData").textContent = belum;
+          allData = data;
+          filteredData = [...allData];
+          updateStatistics();
+          renderTable();
         })
         .catch(error => {
           console.error("Error fetching data:", error);
@@ -581,6 +612,131 @@
           `;
         });
     }
-  </script>
-</body>
-</html>
+
+    // Fungsi untuk memperbarui statistik
+    function updateStatistics() {
+      let total = 0, sudah = 0, belum = 0, tl = 0;
+
+      filteredData.forEach(item => {
+        total++;
+        if (item.realisasi) {
+          if (item.realisasi.toLowerCase() === "sudah") sudah++;
+          else if (item.realisasi.toLowerCase() === "belum") belum++;
+          else if (item.realisasi.toLowerCase() === "tl") tl++;
+        } else {
+          belum++;
+        }
+      });
+
+      document.getElementById("totalData").textContent = total;
+      document.getElementById("sudahData").textContent = sudah;
+      document.getElementById("belumData").textContent = belum;
+      document.getElementById("tlData").textContent = tl;
+      document.getElementById("dataCount").textContent = `Menampilkan ${filteredData.length} data`;
+    }
+
+    // Fungsi untuk merender tabel
+    function renderTable() {
+      const table = document.getElementById("dataTable");
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const paginatedData = filteredData.slice(startIndex, startIndex + itemsPerPage);
+
+      // Clear existing data
+      table.innerHTML = '';
+
+      if (paginatedData.length === 0) {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+            Tidak ada data yang ditemukan
+          </td>
+        `;
+        table.appendChild(row);
+      } else {
+        paginatedData.forEach(item => {
+          const row = document.createElement("tr");
+          row.className = "hover:bg-gray-50";
+          row.innerHTML = `
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formatDate(item.tanggal)}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${item.noSurat || '-'}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.pemohon || '-'}</td>
+            <td class="px-6 py-4 text-sm text-gray-500">${item.alamat || '-'}</td>
+            <td class="px-6 py-4 text-sm text-gray-500">
+              ${item.keterangan || '-'}
+              ${item.barang ? '<div class="text-xs text-gray-400 mt-1">' + 
+                 JSON.parse(item.barang).map(b => `${b.jenis}: ${b.jumlah}`).join(', ') + 
+                 '</div>' : ''}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              ${getStatusBadge(item.realisasi)}
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <div class="flex space-x-2">
+                <button onclick="updateRealisasi('${item.id}', 'Sudah')" 
+                  class="action-btn text-green-600 hover:text-green-900" title="Sudah Direalisasi">
+                  <i class="fas fa-check-circle"></i>
+                </button>
+                <button onclick="updateRealisasi('${item.id}', 'Belum')" 
+                  class="action-btn text-yellow-600 hover:text-yellow-900" title="Belum Direalisasi">
+                  <i class="fas fa-clock"></i>
+                </button>
+                <button onclick="updateRealisasi('${item.id}', 'TL')" 
+                  class="action-btn text-red-600 hover:text-red-900" title="Tindak Lanjut">
+                  <i class="fas fa-times-circle"></i>
+                </button>
+              </div>
+            </td>
+          `;
+          table.appendChild(row);
+        });
+      }
+
+      // Update pagination
+      updatePagination();
+    }
+
+    // Fungsi untuk memperbarui tampilan pagination
+    function updatePagination() {
+      const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+      document.getElementById("prevPage").disabled = currentPage <= 1;
+      document.getElementById("nextPage").disabled = currentPage >= totalPages;
+      
+      const paginationInfo = document.getElementById("paginationInfo");
+      if (filteredData.length > 0) {
+        const startItem = (currentPage - 1) * itemsPerPage + 1;
+        const endItem = Math.min(currentPage * itemsPerPage, filteredData.length);
+        paginationInfo.textContent = `Menampilkan ${startItem}-${endItem} dari ${filteredData.length} data`;
+      } else {
+        paginationInfo.textContent = "Tidak ada data";
+      }
+    }
+
+    // Fungsi untuk mengganti halaman
+    function changePage(direction) {
+      const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+      const newPage = currentPage + direction;
+      
+      if (newPage > 0 && newPage <= totalPages) {
+        currentPage = newPage;
+        renderTable();
+      }
+    }
+
+    // Fungsi untuk menerapkan filter
+    function applyFilters() {
+      const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+      const dateFrom = document.getElementById("dateFrom").value;
+      const dateTo = document.getElementById("dateTo").value;
+      
+      filteredData = allData.filter(item => {
+        // Filter pencarian
+        const matchesSearch = !searchTerm || 
+          (item.pemohon && item.pemohon.toLowerCase().includes(searchTerm)) || 
+          (item.alamat && item.alamat.toLowerCase().includes(searchTerm));
+        
+        // Filter tanggal
+        let matchesDate = true;
+        if (dateFrom || dateTo) {
+          const itemDate = new Date(item.tanggal);
+          const fromDate = dateFrom ? new Date(dateFrom) : null;
+          const toDate = dateTo ? new Date(dateTo)
