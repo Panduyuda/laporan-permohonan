@@ -595,22 +595,12 @@
         realisasi: status
         }),
         headers: {
-        "Content-Type": "application/json"
-        }   
+          "Content-Type": "application/json"
+          }   
         })
-        .then(response => response.json())
-        .then(data => {
-          console.log(data);
-        })
-        .catch(error => {
-          console.error("Error:", error);
-        });
-
-        .then(responseText => {
-          console.log('Response:', responseText);
+console.log('Response:', responseText);
           alert("Data berhasil dikirim!");
           fetchData();
-          // Reset form
           document.getElementById("tanggal").value = "";
           document.getElementById("noSurat").value = "";
           document.getElementById("pemohon").value = "";
@@ -630,9 +620,7 @@
       } catch (error) {
         alert(error.message);
       }
-    }
-
-    // Fungsi untuk memperbarui status realisasi
+          // Fungsi untuk memperbarui status realisasi
     function updateRealisasi(id, status) {
       if (!confirm(`Apakah Anda yakin ingin mengubah status realisasi menjadi '${status}'?`)) {
         return;
