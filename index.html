@@ -60,6 +60,39 @@
     .action-btn:hover {
       transform: scale(1.1);
     }
+    .form-section {
+      background-color: white;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .form-header {
+      background-color: #2e8540;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-top-left-radius: 0.75rem;
+      border-top-right-radius: 0.75rem;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: #374151;
+    }
+    .form-input {
+      width: 100%;
+      padding: 0.5rem 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.375rem;
+      background-color: #f9fafb;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: #2e8540;
+      box-shadow: 0 0 0 3px rgba(46, 133, 64, 0.1);
+    }
     @media (max-width: 640px) {
       .header-content {
         padding-top: 80px;
@@ -104,51 +137,61 @@
   </div>
 
   <div class="container mx-auto p-4 md:p-6">
-    <!-- Form Section -->
-    <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
-      <div class="bg-green-600 px-6 py-3">
-        <h2 class="text-xl font-bold text-white">Laporan Permohonan Bantuan</h2>
+    <!-- Form Section - Updated to match your image layout -->
+    <div class="form-section mb-8">
+      <div class="form-header">
+        <h2 class="text-xl font-bold">Laporan Permohonan Bantuan</h2>
       </div>
       
-      <!-- Form Input -->
       <div class="p-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label for="tanggal" class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
-            <input type="date" id="tanggal" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" />
+        <!-- Tanggal dan Nomor Surat -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div class="form-group">
+            <label for="tanggal" class="form-label">Tanggal</label>
+            <input type="date" id="tanggal" class="form-input">
           </div>
-          <div>
-            <label for="noSurat" class="block text-sm font-medium text-gray-700 mb-1">Nomor Surat</label>
-            <input type="text" id="noSurat" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Masukkan nomor surat" />
-          </div>
-          <div>
-            <label for="pemohon" class="block text-sm font-medium text-gray-700 mb-1">Nama Pemohon/Instansi</label>
-            <input type="text" id="pemohon" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Nama lengkap pemohon" />
-          </div>
-          <div>
-            <label for="alamat" class="block text-sm font-medium text-gray-700 mb-1">Alamat</label>
-            <input type="text" id="alamat" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" placeholder="Alamat lengkap" />
-          </div>
-          <div class="md:col-span-2">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Keterangan Permohonan</label>
-            <div id="barangContainer">
-              <!-- Barang akan ditambahkan dinamis di sini -->
-            </div>
-            <button type="button" onclick="tambahBarang()" class="mt-2 text-sm text-green-600 hover:text-green-800 flex items-center">
-              <i class="fas fa-plus-circle mr-1"></i> Tambah Barang
-            </button>
-          </div>
-          <div>
-            <label for="realisasi" class="block text-sm font-medium text-gray-700 mb-1">Status Realisasi</label>
-            <select id="realisasi" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
-              <option value="">Pilih status realisasi</option>
-              <option value="Sudah">Sudah Direalisasi</option>
-              <option value="Belum">Belum Direalisasi</option>
-              <option value="TL">Tindak Lanjut</option>
-            </select>
+          <div class="form-group">
+            <label for="noSurat" class="form-label">Nomor Surat</label>
+            <input type="text" id="noSurat" class="form-input" placeholder="Masukkan nomor surat">
           </div>
         </div>
-        <div class="mt-6 flex justify-end">
+
+        <!-- Pemohon dan Alamat -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <div class="form-group">
+            <label for="pemohon" class="form-label">Nama Pemohon/Instansi</label>
+            <input type="text" id="pemohon" class="form-input" placeholder="Nama lengkap pemohon">
+          </div>
+          <div class="form-group">
+            <label for="alamat" class="form-label">Alamat</label>
+            <input type="text" id="alamat" class="form-input" placeholder="Alamat lengkap">
+          </div>
+        </div>
+
+        <!-- Keterangan Permohonan -->
+        <div class="mb-6">
+          <label class="form-label">Keterangan Permohonan</label>
+          <div id="barangContainer" class="space-y-4">
+            <!-- Barang akan ditambahkan dinamis di sini -->
+          </div>
+          <button type="button" onclick="tambahBarang()" class="mt-2 text-sm text-green-600 hover:text-green-800 flex items-center">
+            <i class="fas fa-plus-circle mr-1"></i> Tambah Barang
+          </button>
+        </div>
+
+        <!-- Status Realisasi -->
+        <div class="mb-6">
+          <label for="realisasi" class="form-label">Status Realisasi</label>
+          <select id="realisasi" class="form-input">
+            <option value="">Pilih status realisasi</option>
+            <option value="Sudah">Sudah Direalisasi</option>
+            <option value="Belum">Belum Direalisasi</option>
+            <option value="TL">Tindak Lanjut</option>
+          </select>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="flex justify-end">
           <button onclick="submitData()" class="btn-hijau text-white px-6 py-2 rounded-lg font-medium flex items-center">
             <i class="fas fa-paper-plane mr-2"></i> Kirim Permohonan
           </button>
@@ -158,9 +201,9 @@
 
     <!-- Template untuk input barang (hidden) -->
     <template id="barangTemplate">
-      <div class="grid grid-cols-2 gap-4 mb-3 barang-item">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 barang-item p-4 bg-gray-50 rounded-lg">
         <div>
-          <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 jenis-barang">
+          <select class="form-input jenis-barang">
             <option value="">Pilih Jenis Barang</option>
             <option value="Komposter">Komposter</option>
             <option value="Tempat Sampah Pilah">Tempat Sampah Pilah</option>
@@ -172,13 +215,13 @@
           </select>
         </div>
         <div class="flex items-center">
-          <input type="number" min="1" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 jumlah-barang" placeholder="Jumlah">
+          <input type="number" min="1" class="form-input jumlah-barang" placeholder="Jumlah">
           <button type="button" onclick="hapusBarang(this)" class="ml-2 text-red-500 hover:text-red-700">
             <i class="fas fa-times"></i>
           </button>
         </div>
         <div class="col-span-2 catatan-lainnya-container hidden">
-          <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 catatan-lainnya" placeholder="Sebutkan jenis barang">
+          <input type="text" class="form-input catatan-lainnya" placeholder="Sebutkan jenis barang">
         </div>
       </div>
     </template>
@@ -426,7 +469,6 @@
 
   <!-- Script -->
   <script>
- <script>
     const url = "https://script.google.com/macros/s/AKfycbyPMLG9LJ8wsMQqEGIJit6ZJlD36JSSdIevp1Gv_nJg7Vd_FIESgzFbWX4iAD_3mtJW/exec";
     let allData = [];
     let filteredData = [];
@@ -465,6 +507,27 @@
       } else {
         alert('Minimal harus ada satu barang');
       }
+    }
+
+    // Format date to local Indonesian format
+    function formatDate(dateString) {
+      if (!dateString) return '-';
+      const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+      return new Date(dateString).toLocaleDateString('id-ID', options);
+    }
+
+    // Get status badge
+    function getStatusBadge(status) {
+      if (!status) return '<span class="px-2 py-1 text-xs rounded">-</span>';
+      const lowerStatus = status.toLowerCase();
+      if (lowerStatus === 'sudah') {
+        return '<span class="px-2 py-1 text-xs font-semibold rounded bg-green-100 text-green-800">Sudah</span>';
+      } else if (lowerStatus === 'belum') {
+        return '<span class="px-2 py-1 text-xs font-semibold rounded bg-yellow-100 text-yellow-800">Belum</span>';
+      } else if (lowerStatus === 'tl') {
+        return '<span class="px-2 py-1 text-xs font-semibold rounded bg-red-100 text-red-800">TL</span>';
+      }
+      return status;
     }
 
     function submitData() {
@@ -562,6 +625,7 @@
         alert(error.message);
       }
     }
+
     // Fungsi untuk memperbarui status realisasi
     function updateRealisasi(id, status) {
       if (!confirm(`Apakah Anda yakin ingin mengubah status realisasi menjadi '${status}'?`)) {
@@ -740,4 +804,41 @@
         if (dateFrom || dateTo) {
           const itemDate = new Date(item.tanggal);
           const fromDate = dateFrom ? new Date(dateFrom) : null;
-          const toDate = dateTo ? new Date(dateTo)
+          const toDate = dateTo ? new Date(dateTo) : null;
+          
+          if (fromDate && itemDate < fromDate) matchesDate = false;
+          if (toDate && itemDate > toDate) matchesDate = false;
+        }
+        
+        return matchesSearch && matchesDate;
+      });
+
+      currentPage = 1;
+      renderTable();
+    }
+
+    // Fungsi untuk reset filter
+    function resetFilters() {
+      document.getElementById("searchInput").value = "";
+      document.getElementById("dateFrom").value = "";
+      document.getElementById("dateTo").value = "";
+      filteredData = [...allData];
+      currentPage = 1;
+      renderTable();
+    }
+
+    // Fungsi untuk export data
+    function exportData() {
+      const dataStr = JSON.stringify(filteredData, null, 2);
+      const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+      
+      const exportFileDefaultName = 'data-permohonan.json';
+      
+      const linkElement = document.createElement('a');
+      linkElement.setAttribute('href', dataUri);
+      linkElement.setAttribute('download', exportFileDefaultName);
+      linkElement.click();
+    }
+  </script>
+</body>
+</html>
