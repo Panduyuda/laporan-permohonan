@@ -469,7 +469,7 @@
 
   <!-- Script -->
   <script>
-    const url = "https://script.google.com/macros/s/AKfycbwbn-OZeC_PLHoIxMKnL4YX30BQo1dW3Ja4tzkg5zQRLk4c5nBB69VtkYcj6NGS2e7E/exec";
+    const url = "https://script.google.com/macros/s/AKfycbwED96OOVLgPFKOgUM6mEDCkZkYJhHjwlnhkof5mJQiB3eKEg9YRZ5WpoZlgvspww2B/exec";
     let allData = [];
     let filteredData = [];
     let currentPage = 1;
@@ -650,7 +650,7 @@
       .then(res => res.text())
       .then(() => {
         alert("Status berhasil diperbarui!");
-        fetchData();
+        fetchData(); // Memperbarui data setelah perubahan
       })
       .catch(() => {
         alert("Gagal memperbarui status.");
@@ -680,6 +680,7 @@
           `;
         });
     }
+
     // Fungsi untuk memperbarui statistik
     function updateStatistics() {
       let total = 0, sudah = 0, belum = 0, tl = 0;
