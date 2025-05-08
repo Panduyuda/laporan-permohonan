@@ -587,7 +587,7 @@
         button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Mengirim...';
         button.disabled = true;
 
-        fetch(url, {"https://script.google.com/macros/s/AKfycby6ShMRwOLd4lhpDEVcnxL5ed95noKDNwD59TKnedjju6zcgm9LX9BqjX4i_ZZO7WNR/exec";
+        fetch(url, {
           method: "POST",
           body: JSON.stringify(data),
           headers: {
@@ -636,7 +636,7 @@
       const originalHTML = button.innerHTML;
       button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
       
-      fetch(url, {"https://script.google.com/macros/s/AKfycby6ShMRwOLd4lhpDEVcnxL5ed95noKDNwD59TKnedjju6zcgm9LX9BqjX4i_ZZO7WNR/exec";
+      fetch(url, {
         method: "POST",
         body: JSON.stringify({
           action: "update",
@@ -650,7 +650,7 @@
       .then(res => res.text())
       .then(() => {
         alert("Status berhasil diperbarui!");
-        fetchData(); // Memperbarui data setelah perubahan
+        fetchData();
       })
       .catch(() => {
         alert("Gagal memperbarui status.");
@@ -680,7 +680,6 @@
           `;
         });
     }
-
     // Fungsi untuk memperbarui statistik
     function updateStatistics() {
       let total = 0, sudah = 0, belum = 0, tl = 0;
