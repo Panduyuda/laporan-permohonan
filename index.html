@@ -93,6 +93,11 @@
       border-color: #2e8540;
       box-shadow: 0 0 0 3px rgba(46, 133, 64, 0.1);
     }
+    .error-message {
+      color: #ef4444;
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+    }
     @media (max-width: 640px) {
       .header-content {
         padding-top: 80px;
@@ -147,45 +152,49 @@
         <!-- Tanggal dan Nomor Surat -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div class="form-group">
-            <label for="tanggal" class="form-label">Tanggal</label>
-            <input type="date" id="tanggal" class="form-input">
+            <label for="tanggal" class="form-label">Tanggal <span class="text-red-500">*</span></label>
+            <input type="date" id="tanggal" class="form-input" max="">
+            <div id="tanggalError" class="error-message"></div>
           </div>
           <div class="form-group">
-            <label for="noSurat" class="form-label">Nomor Surat</label>
+            <label for="noSurat" class="form-label">Nomor Surat <span class="text-red-500">*</span></label>
             <input type="text" id="noSurat" class="form-input" placeholder="Masukkan nomor surat">
+            <div id="noSuratError" class="error-message"></div>
           </div>
         </div>
 
         <!-- Pemohon dan Alamat -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div class="form-group">
-            <label for="pemohon" class="form-label">Nama Pemohon/Instansi</label>
+            <label for="pemohon" class="form-label">Nama Pemohon/Instansi <span class="text-red-500">*</span></label>
             <input type="text" id="pemohon" class="form-input" placeholder="Nama lengkap pemohon">
+            <div id="pemohonError" class="error-message"></div>
           </div>
           <div class="form-group">
-            <label for="alamat" class="form-label">Alamat</label>
+            <label for="alamat" class="form-label">Alamat <span class="text-red-500">*</span></label>
             <input type="text" id="alamat" class="form-input" placeholder="Alamat lengkap">
+            <div id="alamatError" class="error-message"></div>
           </div>
         </div>
 
         <!-- Keterangan Permohonan -->
         <div class="mb-6">
-          <label class="form-label">Keterangan Permohonan</label>
+          <label class="form-label">Keterangan Permohonan <span class="text-red-500">*</span></label>
           <div id="barangContainer" class="space-y-4">
             <!-- Barang akan ditambahkan dinamis di sini -->
           </div>
           <button type="button" onclick="tambahBarang()" class="mt-2 text-sm text-green-600 hover:text-green-800 flex items-center">
             <i class="fas fa-plus-circle mr-1"></i> Tambah Barang
           </button>
+          <div id="barangError" class="error-message"></div>
         </div>
 
         <!-- Status Realisasi -->
         <div class="mb-6">
           <label for="realisasi" class="form-label">Status Realisasi</label>
           <select id="realisasi" class="form-input">
-            <option value="">Pilih status realisasi</option>
-            <option value="Sudah">Sudah Direalisasi</option>
             <option value="Belum">Belum Direalisasi</option>
+            <option value="Sudah">Sudah Direalisasi</option>
             <option value="TL">Tindak Lanjut</option>
           </select>
         </div>
@@ -203,7 +212,7 @@
     <template id="barangTemplate">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 barang-item p-4 bg-gray-50 rounded-lg">
         <div>
-          <select class="form-input jenis-barang">
+          <select class="form-input jenis-barang" required>
             <option value="">Pilih Jenis Barang</option>
             <option value="Komposter">Komposter</option>
             <option value="Tempat Sampah Pilah">Tempat Sampah Pilah</option>
@@ -215,13 +224,13 @@
           </select>
         </div>
         <div class="flex items-center">
-          <input type="number" min="1" class="form-input jumlah-barang" placeholder="Jumlah">
+          <input type="number" min="1" class="form-input jumlah-barang" placeholder="Jumlah" required>
           <button type="button" onclick="hapusBarang(this)" class="ml-2 text-red-500 hover:text-red-700">
             <i class="fas fa-times"></i>
           </button>
         </div>
         <div class="col-span-2 catatan-lainnya-container hidden">
-          <input type="text" class="form-input catatan-lainnya" placeholder="Sebutkan jenis barang">
+          <input type="text" class="form-input catatan-lainnya" placeholder="Sebutkan jenis barang" required>
         </div>
       </div>
     </template>
@@ -469,17 +478,35 @@
 
   <!-- Script -->
   <script>
-    const url = "https://script.google.com/macros/s/AKfycbwsBwBJGWe-q0lE7yCQ2dmAPr7TZYYVp_Ui_RM-y9b_H1zK-YoD_9kuuOSJNWuYjtjnaQ/exec";
+    const url = "https://script.google.com/macros/s/AKfycbwED96OOVLgPFKOgUM6mEDCkZkYJhHjwlnhkof5mJQiB3eKEg9YRZ5WpoZlgvspww2B/exec";
     let allData = [];
     let filteredData = [];
     let currentPage = 1;
     const itemsPerPage = 10;
+    let debounceTimer;
 
     // Initialize the form with one item when page loads
     document.addEventListener('DOMContentLoaded', function() {
+      // Set max date to today
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('tanggal').max = today;
+      
       tambahBarang();
       fetchData();
+      
+      // Add debounce to search input
+      document.getElementById('searchInput').addEventListener('input', function() {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(applyFilters, 500);
+      });
     });
+
+    // Sanitize input to prevent XSS
+    function sanitizeInput(input) {
+      const div = document.createElement('div');
+      div.textContent = input;
+      return div.innerHTML;
+    }
 
     // Fungsi untuk menambah input barang
     function tambahBarang() {
@@ -512,8 +539,12 @@
     // Format date to local Indonesian format
     function formatDate(dateString) {
       if (!dateString) return '-';
-      const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-      return new Date(dateString).toLocaleDateString('id-ID', options);
+      try {
+        const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+        return new Date(dateString).toLocaleDateString('id-ID', options);
+      } catch (e) {
+        return dateString;
+      }
     }
 
     // Get status badge
@@ -530,100 +561,159 @@
       return status;
     }
 
+    // Validate form inputs
+    function validateForm() {
+      let isValid = true;
+      
+      // Clear previous errors
+      document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+      
+      // Validate date
+      const tanggal = document.getElementById('tanggal');
+      if (!tanggal.value) {
+        document.getElementById('tanggalError').textContent = 'Tanggal harus diisi';
+        isValid = false;
+      } else {
+        const selectedDate = new Date(tanggal.value);
+        const today = new Date();
+        if (selectedDate > today) {
+          document.getElementById('tanggalError').textContent = 'Tanggal tidak boleh lebih dari hari ini';
+          isValid = false;
+        }
+      }
+      
+      // Validate nomor surat
+      const noSurat = document.getElementById('noSurat');
+      if (!noSurat.value.trim()) {
+        document.getElementById('noSuratError').textContent = 'Nomor surat harus diisi';
+        isValid = false;
+      }
+      
+      // Validate pemohon
+      const pemohon = document.getElementById('pemohon');
+      if (!pemohon.value.trim()) {
+        document.getElementById('pemohonError').textContent = 'Nama pemohon harus diisi';
+        isValid = false;
+      }
+      
+      // Validate alamat
+      const alamat = document.getElementById('alamat');
+      if (!alamat.value.trim()) {
+        document.getElementById('alamatError').textContent = 'Alamat harus diisi';
+        isValid = false;
+      }
+      
+      // Validate barang items
+      const barangItems = document.querySelectorAll('.barang-item');
+      if (barangItems.length === 0) {
+        document.getElementById('barangError').textContent = 'Minimal harus ada satu barang';
+        isValid = false;
+      } else {
+        barangItems.forEach((item, index) => {
+          const jenis = item.querySelector('.jenis-barang');
+          const jumlah = item.querySelector('.jumlah-barang');
+          const catatan = item.querySelector('.catatan-lainnya');
+          
+          if (!jenis.value) {
+            document.getElementById('barangError').textContent = `Jenis barang ke-${index + 1} harus dipilih`;
+            isValid = false;
+          }
+          
+          if (!jumlah.value || parseInt(jumlah.value) < 1) {
+            document.getElementById('barangError').textContent = `Jumlah barang ke-${index + 1} harus diisi (minimal 1)`;
+            isValid = false;
+          }
+          
+          if (jenis.value === 'Lainnya' && !catatan.value.trim()) {
+            document.getElementById('barangError').textContent = `Keterangan barang ke-${index + 1} harus diisi untuk jenis 'Lainnya'`;
+            isValid = false;
+          }
+        });
+      }
+      
+      return isValid;
+    }
+
     function submitData() {
+      if (!validateForm()) {
+        return;
+      }
+
       const tanggal = document.getElementById("tanggal");
       const noSurat = document.getElementById("noSurat");
       const pemohon = document.getElementById("pemohon");
       const alamat = document.getElementById("alamat");
       
-      // Validation
-      if (!tanggal.value || !noSurat.value || !pemohon.value || !alamat.value) {
-        alert("Harap lengkapi semua data permohonan!");
-        return;
-      }
-
       // Collect item data
       const barangItems = document.querySelectorAll('.barang-item');
       const barangData = [];
       
-      try {
-        barangItems.forEach(item => {
-          const jenis = item.querySelector('.jenis-barang').value;
-          const jumlah = item.querySelector('.jumlah-barang').value;
-          
-          if (!jenis || !jumlah) {
-            throw new Error("Harap lengkapi semua data barang!");
-          }
-          
-          let keteranganBarang = jenis;
-          if (jenis === 'Lainnya') {
-            const catatan = item.querySelector('.catatan-lainnya').value;
-            if (!catatan) {
-              throw new Error("Harap isi keterangan untuk barang 'Lainnya'!");
-            }
-            keteranganBarang = catatan;
-          }
-          
-          barangData.push({
-            jenis: keteranganBarang,
-            jumlah: parseInt(jumlah)
-          });
+      barangItems.forEach(item => {
+        const jenis = item.querySelector('.jenis-barang').value;
+        const jumlah = item.querySelector('.jumlah-barang').value;
+        
+        let keteranganBarang = jenis;
+        if (jenis === 'Lainnya') {
+          keteranganBarang = item.querySelector('.catatan-lainnya').value;
+        }
+        
+        barangData.push({
+          jenis: keteranganBarang,
+          jumlah: parseInt(jumlah)
         });
+      });
 
-        const data = {
-          action: "create",
-          tanggal: tanggal.value,
-          noSurat: noSurat.value,
-          pemohon: pemohon.value,
-          alamat: alamat.value,
-          barang: JSON.stringify(barangData),
-          keterangan: barangData.map(b => `${b.jenis} (${b.jumlah} buah)`).join(", "),
-          realisasi: document.getElementById("realisasi").value || "Belum",
-        };
+      const data = {
+        action: "create",
+        tanggal: tanggal.value,
+        noSurat: noSurat.value,
+        pemohon: sanitizeInput(pemohon.value),
+        alamat: sanitizeInput(alamat.value),
+        barang: JSON.stringify(barangData),
+        keterangan: barangData.map(b => `${b.jenis} (${b.jumlah} buah)`).join(", "),
+        realisasi: document.getElementById("realisasi").value || "Belum",
+      };
 
-        // Show loading state
-        const button = document.querySelector('button[onclick="submitData()"]');
-        const originalText = button.innerHTML;
-        button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Mengirim...';
-        button.disabled = true;
+      // Show loading state
+      const button = document.querySelector('button[onclick="submitData()"]');
+      const originalText = button.innerHTML;
+      button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Mengirim...';
+      button.disabled = true;
 
-        fetch(url, {
-          method: "POST",
-          body: JSON.stringify(data),
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        })
-        .then(res => {
-          if (!res.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return res.text();
-        })
-        .then(responseText => {
-          console.log('Response:', responseText);
-          alert("Data berhasil dikirim!");
-          fetchData();
-          // Reset form
-          document.getElementById("tanggal").value = "";
-          document.getElementById("noSurat").value = "";
-          document.getElementById("pemohon").value = "";
-          document.getElementById("alamat").value = "";
-          document.getElementById("realisasi").value = "";
-          document.getElementById("barangContainer").innerHTML = "";
-          tambahBarang(); // Add default item
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-          alert(`Terjadi kesalahan: ${error.message}`);
-        })
-        .finally(() => {
-          button.innerHTML = originalText;
-          button.disabled = false;
-        });
-      } catch (error) {
-        alert(error.message);
-      }
+      fetch(url, {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return res.text();
+      })
+      .then(responseText => {
+        console.log('Response:', responseText);
+        alert("Data berhasil dikirim!");
+        fetchData();
+        // Reset form
+        document.getElementById("tanggal").value = "";
+        document.getElementById("noSurat").value = "";
+        document.getElementById("pemohon").value = "";
+        document.getElementById("alamat").value = "";
+        document.getElementById("realisasi").value = "Belum";
+        document.getElementById("barangContainer").innerHTML = "";
+        tambahBarang(); // Add default item
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        alert(`Terjadi kesalahan: ${error.message}`);
+      })
+      .finally(() => {
+        button.innerHTML = originalText;
+        button.disabled = false;
+      });
     }
 
     // Fungsi untuk memperbarui status realisasi
@@ -636,16 +726,16 @@
       const originalHTML = button.innerHTML;
       button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
       
-      fetch(scriptURL, {
-  method: 'POST',
-  mode: 'no-cors', // Penting!
-  redirect: 'follow', // Krusial untuk Google Apps Script
-  headers: {
-    'Content-Type': 'text/plain' // Bukan application/json
-  },
-  body: JSON.stringify(formData)
-})
-
+      fetch(url, {
+        method: "POST",
+        body: JSON.stringify({
+          action: "update",
+          id: id,
+          realisasi: status
+        }),
+        headers: {
+          "Content-Type": "application/json"
+        }
       })
       .then(res => res.text())
       .then(() => {
@@ -660,8 +750,25 @@
 
     // Fungsi untuk memuat data
     function fetchData() {
+      // Show loading state
+      const table = document.getElementById("dataTable");
+      table.innerHTML = `
+        <tr>
+          <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+            <div class="flex justify-center">
+              <i class="fas fa-spinner fa-spin text-2xl text-green-500"></i>
+            </div>
+          </td>
+        </tr>
+      `;
+
       fetch(url)
-        .then(res => res.json())
+        .then(res => {
+          if (!res.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return res.json();
+        })
         .then(data => {
           allData = data;
           filteredData = [...allData];
@@ -674,7 +781,7 @@
           table.innerHTML = `
             <tr>
               <td colspan="7" class="px-6 py-4 text-center text-red-500">
-                Gagal memuat data. Silakan coba lagi nanti.
+                Gagal memuat data. Silakan coba lagi nanti
               </td>
             </tr>
           `;
