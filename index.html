@@ -98,6 +98,31 @@
       font-size: 0.875rem;
       margin-top: 0.25rem;
     }
+    .tooltip {
+      position: relative;
+      display: inline-block;
+    }
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 120px;
+      background-color: #555;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -60px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 12px;
+    }
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
     @media (max-width: 640px) {
       .header-content {
         padding-top: 80px;
@@ -116,6 +141,12 @@
       }
       .title-system {
         font-size: 1.2rem;
+      }
+      .barang-item {
+        grid-template-columns: 1fr !important;
+      }
+      .barang-item .flex {
+        justify-content: space-between;
       }
     }
   </style>
@@ -142,7 +173,7 @@
   </div>
 
   <div class="container mx-auto p-4 md:p-6">
-    <!-- Form Section - Updated to match your image layout -->
+    <!-- Form Section -->
     <div class="form-section mb-8">
       <div class="form-header">
         <h2 class="text-xl font-bold">Laporan Permohonan Bantuan</h2>
@@ -225,8 +256,9 @@
         </div>
         <div class="flex items-center">
           <input type="number" min="1" class="form-input jumlah-barang" placeholder="Jumlah" required>
-          <button type="button" onclick="hapusBarang(this)" class="ml-2 text-red-500 hover:text-red-700">
+          <button type="button" onclick="hapusBarang(this)" class="ml-2 text-red-500 hover:text-red-700 tooltip">
             <i class="fas fa-times"></i>
+            <span class="tooltiptext">Hapus Barang</span>
           </button>
         </div>
         <div class="col-span-2 catatan-lainnya-container hidden">
@@ -490,6 +522,7 @@
       // Set max date to today
       const today = new Date().toISOString().split('T')[0];
       document.getElementById('tanggal').max = today;
+      document.getElementById('tanggal').value = today;
       
       tambahBarang();
       fetchData();
@@ -503,9 +536,10 @@
 
     // Sanitize input to prevent XSS
     function sanitizeInput(input) {
+      if (!input) return '';
       const div = document.createElement('div');
       div.textContent = input;
-      return div.innerHTML;
+      return div.innerHTML.replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
 
     // Fungsi untuk menambah input barang
@@ -530,7 +564,9 @@
     function hapusBarang(button) {
       const items = document.querySelectorAll('.barang-item');
       if (items.length > 1) {
-        button.closest('.barang-item').remove();
+        if (confirm('Apakah Anda yakin ingin menghapus barang ini?')) {
+          button.closest('.barang-item').remove();
+        }
       } else {
         alert('Minimal harus ada satu barang');
       }
@@ -576,6 +612,7 @@
       } else {
         const selectedDate = new Date(tanggal.value);
         const today = new Date();
+        today.setHours(0, 0, 0, 0);
         if (selectedDate > today) {
           document.getElementById('tanggalError').textContent = 'Tanggal tidak boleh lebih dari hari ini';
           isValid = false;
@@ -587,6 +624,9 @@
       if (!noSurat.value.trim()) {
         document.getElementById('noSuratError').textContent = 'Nomor surat harus diisi';
         isValid = false;
+      } else if (noSurat.value.length > 50) {
+        document.getElementById('noSuratError').textContent = 'Nomor surat maksimal 50 karakter';
+        isValid = false;
       }
       
       // Validate pemohon
@@ -594,12 +634,18 @@
       if (!pemohon.value.trim()) {
         document.getElementById('pemohonError').textContent = 'Nama pemohon harus diisi';
         isValid = false;
+      } else if (pemohon.value.length > 100) {
+        document.getElementById('pemohonError').textContent = 'Nama pemohon maksimal 100 karakter';
+        isValid = false;
       }
       
       // Validate alamat
       const alamat = document.getElementById('alamat');
       if (!alamat.value.trim()) {
         document.getElementById('alamatError').textContent = 'Alamat harus diisi';
+        isValid = false;
+      } else if (alamat.value.length > 200) {
+        document.getElementById('alamatError').textContent = 'Alamat maksimal 200 karakter';
         isValid = false;
       }
       
@@ -619,13 +665,16 @@
             isValid = false;
           }
           
-          if (!jumlah.value || parseInt(jumlah.value) < 1) {
-            document.getElementById('barangError').textContent = `Jumlah barang ke-${index + 1} harus diisi (minimal 1)`;
+          if (!jumlah.value || parseInt(jumlah.value) < 1 || parseInt(jumlah.value) > 1000) {
+            document.getElementById('barangError').textContent = `Jumlah barang ke-${index + 1} harus diisi (1-1000)`;
             isValid = false;
           }
           
           if (jenis.value === 'Lainnya' && !catatan.value.trim()) {
             document.getElementById('barangError').textContent = `Keterangan barang ke-${index + 1} harus diisi untuk jenis 'Lainnya'`;
+            isValid = false;
+          } else if (jenis.value === 'Lainnya' && catatan.value.length > 100) {
+            document.getElementById('barangError').textContent = `Keterangan barang ke-${index + 1} maksimal 100 karakter`;
             isValid = false;
           }
         });
@@ -698,7 +747,7 @@
         alert("Data berhasil dikirim!");
         fetchData();
         // Reset form
-        document.getElementById("tanggal").value = "";
+        document.getElementById("tanggal").value = today;
         document.getElementById("noSurat").value = "";
         document.getElementById("pemohon").value = "";
         document.getElementById("alamat").value = "";
@@ -737,13 +786,18 @@
           "Content-Type": "application/json"
         }
       })
-      .then(res => res.text())
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Gagal memperbarui status');
+        }
+        return res.text();
+      })
       .then(() => {
         alert("Status berhasil diperbarui!");
         fetchData(); // Memperbarui data setelah perubahan
       })
-      .catch(() => {
-        alert("Gagal memperbarui status.");
+      .catch((error) => {
+        alert(error.message);
         button.innerHTML = originalHTML;
       });
     }
@@ -762,6 +816,12 @@
         </tr>
       `;
 
+      // Show loading in statistics
+      document.getElementById("totalData").textContent = "...";
+      document.getElementById("sudahData").textContent = "...";
+      document.getElementById("belumData").textContent = "...";
+      document.getElementById("tlData").textContent = "...";
+
       fetch(url)
         .then(res => {
           if (!res.ok) {
@@ -770,7 +830,7 @@
           return res.json();
         })
         .then(data => {
-          allData = data;
+          allData = Array.isArray(data) ? data : [];
           filteredData = [...allData];
           updateStatistics();
           renderTable();
@@ -785,6 +845,7 @@
               </td>
             </tr>
           `;
+          updateStatistics();
         });
     }
 
@@ -831,37 +892,52 @@
         paginatedData.forEach(item => {
           const row = document.createElement("tr");
           row.className = "hover:bg-gray-50";
-          row.innerHTML = `
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formatDate(item.tanggal)}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${item.noSurat || '-'}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.pemohon || '-'}</td>
-            <td class="px-6 py-4 text-sm text-gray-500">${item.alamat || '-'}</td>
-            <td class="px-6 py-4 text-sm text-gray-500">
-              ${item.keterangan || '-'}
-              ${item.barang ? '<div class="text-xs text-gray-400 mt-1">' + 
-                 JSON.parse(item.barang).map(b => `${b.jenis}: ${b.jumlah}`).join(', ') + 
-                 '</div>' : ''}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-              ${getStatusBadge(item.realisasi)}
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-              <div class="flex space-x-2">
-                <button onclick="updateRealisasi('${item.id}', 'Sudah')" 
-                  class="action-btn text-green-600 hover:text-green-900" title="Sudah Direalisasi">
-                  <i class="fas fa-check-circle"></i>
-                </button>
-                <button onclick="updateRealisasi('${item.id}', 'Belum')" 
-                  class="action-btn text-yellow-600 hover:text-yellow-900" title="Belum Direalisasi">
-                  <i class="fas fa-clock"></i>
-                </button>
-                <button onclick="updateRealisasi('${item.id}', 'TL')" 
-                  class="action-btn text-red-600 hover:text-red-900" title="Tindak Lanjut">
-                  <i class="fas fa-times-circle"></i>
-                </button>
-              </div>
-            </td>
-          `;
+          
+          try {
+            const barangList = item.barang ? JSON.parse(item.barang) : [];
+            row.innerHTML = `
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formatDate(item.tanggal)}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${item.noSurat || '-'}</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${item.pemohon || '-'}</td>
+              <td class="px-6 py-4 text-sm text-gray-500">${item.alamat || '-'}</td>
+              <td class="px-6 py-4 text-sm text-gray-500">
+                ${item.keterangan || '-'}
+                ${barangList.length > 0 ? '<div class="text-xs text-gray-400 mt-1">' + 
+                   barangList.map(b => `${b.jenis}: ${b.jumlah}`).join(', ') + 
+                   '</div>' : ''}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                ${getStatusBadge(item.realisasi)}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <div class="flex space-x-2">
+                  <button onclick="updateRealisasi('${item.id}', 'Sudah')" 
+                    class="action-btn text-green-600 hover:text-green-900 tooltip">
+                    <i class="fas fa-check-circle"></i>
+                    <span class="tooltiptext">Sudah Direalisasi</span>
+                  </button>
+                  <button onclick="updateRealisasi('${item.id}', 'Belum')" 
+                    class="action-btn text-yellow-600 hover:text-yellow-900 tooltip">
+                    <i class="fas fa-clock"></i>
+                    <span class="tooltiptext">Belum Direalisasi</span>
+                  </button>
+                  <button onclick="updateRealisasi('${item.id}', 'TL')" 
+                    class="action-btn text-red-600 hover:text-red-900 tooltip">
+                    <i class="fas fa-times-circle"></i>
+                    <span class="tooltiptext">Tindak Lanjut</span>
+                  </button>
+                </div>
+              </td>
+            `;
+          } catch (e) {
+            console.error("Error parsing item data:", e);
+            row.innerHTML = `
+              <td colspan="7" class="px-6 py-4 text-center text-red-500">
+                Error menampilkan data ini
+              </td>
+            `;
+          }
+          
           table.appendChild(row);
         });
       }
@@ -885,6 +961,7 @@
         paginationInfo.textContent = "Tidak ada data";
       }
     }
+
     // Fungsi untuk mengganti halaman
     function changePage(direction) {
       const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -906,17 +983,25 @@
         // Filter pencarian
         const matchesSearch = !searchTerm || 
           (item.pemohon && item.pemohon.toLowerCase().includes(searchTerm)) || 
-          (item.alamat && item.alamat.toLowerCase().includes(searchTerm));
+          (item.alamat && item.alamat.toLowerCase().includes(searchTerm)) ||
+          (item.noSurat && item.noSurat.toLowerCase().includes(searchTerm));
         
         // Filter tanggal
         let matchesDate = true;
         if (dateFrom || dateTo) {
-          const itemDate = new Date(item.tanggal);
-          const fromDate = dateFrom ? new Date(dateFrom) : null;
-          const toDate = dateTo ? new Date(dateTo) : null;
-          
-          if (fromDate && itemDate < fromDate) matchesDate = false;
-          if (toDate && itemDate > toDate) matchesDate = false;
+          try {
+            const itemDate = item.tanggal ? new Date(item.tanggal) : null;
+            if (!itemDate) return false;
+            
+            const fromDate = dateFrom ? new Date(dateFrom) : null;
+            const toDate = dateTo ? new Date(dateTo) : null;
+            
+            if (fromDate && itemDate < fromDate) matchesDate = false;
+            if (toDate && itemDate > toDate) matchesDate = false;
+          } catch (e) {
+            console.error("Error filtering date:", e);
+            matchesDate = false;
+          }
         }
         
         return matchesSearch && matchesDate;
@@ -938,15 +1023,42 @@
 
     // Fungsi untuk export data
     function exportData() {
-      const dataStr = JSON.stringify(filteredData, null, 2);
-      const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+      if (filteredData.length === 0) {
+        alert("Tidak ada data untuk diexport");
+        return;
+      }
+
+      // Convert to CSV format
+      const headers = ["Tanggal", "No Surat", "Pemohon", "Alamat", "Keterangan", "Realisasi"];
+      const csvRows = [];
       
-      const exportFileDefaultName = 'data-permohonan.json';
+      // Add header row
+      csvRows.push(headers.join(','));
       
-      const linkElement = document.createElement('a');
-      linkElement.setAttribute('href', dataUri);
-      linkElement.setAttribute('download', exportFileDefaultName);
-      linkElement.click();
+      // Add data rows
+      filteredData.forEach(item => {
+        const row = [
+          `"${formatDate(item.tanggal)}"`,
+          `"${item.noSurat || ''}"`,
+          `"${item.pemohon || ''}"`,
+          `"${item.alamat || ''}"`,
+          `"${item.keterangan || ''}"`,
+          `"${item.realisasi || ''}"`
+        ];
+        csvRows.push(row.join(','));
+      });
+
+      const csvString = csvRows.join('\n');
+      const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `data-permohonan-${new Date().toISOString().slice(0,10)}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
   </script>
 </body>
