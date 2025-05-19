@@ -510,22 +510,37 @@
 
   <!-- Script -->
   <script>
-    const url = "https://script.google.com/macros/s/AKfycbyCg5I9dbuad3DCOSaJY0Wzuj6iSDn1w9aD3PGwVkS7IFH9QxbngyB9FUFKYA1Me22pWA/exec";
-    let allData = [];
-    let filteredData = [];
-    let currentPage = 1;
-    const itemsPerPage = 10;
-    let debounceTimer;
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyCg5I9dbuad3DCOSaJY0Wzuj6iSDn1w9aD3PGwVkS7IFH9QxbngyB9FUFKYA1Me22pWA/exec";
+    async function submitForm() {
+    const formData = {
+        tanggal: document.getElementById('tanggal').value,
+        noSurat: document.getElementById('noSurat').value,
+        pemohon: document.getElementById('pemohon').value,
+        alamat: document.getElementById('alamat').value,
+        keterangan: document.getElementById('keterangan').value
+      };
+try {
+        const response = await fetch(SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify(formData),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
 
-    // Initialize the form with one item when page loads
-    document.addEventListener('DOMContentLoaded', function() {
-      // Set max date to today
-      const today = new Date().toISOString().split('T')[0];
-      document.getElementById('tanggal').max = today;
-      document.getElementById('tanggal').value = today;
-      
-      tambahBarang();
-      fetchData();
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
+        }
+
+        const result = await response.text();
+        alert('Data berhasil dikirim!');
+        console.log('Server response:', result);
+        
+      } catch (error) {
+        console.error('Fetch error:', error);
+        alert('Gagal mengirim data: ' + error.message);
+      }
+    }
       
       // Add debounce to search input
       document.getElementById('searchInput').addEventListener('input', function() {
