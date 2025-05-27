@@ -510,39 +510,29 @@
 
   <!-- Script -->
   <script>
+    // Global variables
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwjwCcSbub0WwmM49aoHpD5f4zhBNOY_JLlP4nb9DU3XWmdmP8bt5HjN4peWig66l6g/exec";
-    async function submitForm() {
-    const formData = {
-        tanggal: document.getElementById('tanggal').value,
-        noSurat: document.getElementById('noSurat').value,
-        pemohon: document.getElementById('pemohon').value,
-        alamat: document.getElementById('alamat').value,
-        keterangan: document.getElementById('keterangan').value
-      };
-try {
-        const response = await fetch(SCRIPT_URL, {
-          method: 'POST',
-          body: JSON.stringify(formData),
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
+    const url = SCRIPT_URL; // Alias for consistency
+    let allData = [];
+    let filteredData = [];
+    let currentPage = 1;
+    const itemsPerPage = 10;
+    let debounceTimer;
 
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status}`);
-        }
-
-        const result = await response.text();
-        alert('Data berhasil dikirim!');
-        console.log('Server response:', result);
-        
-      } catch (error) {
-        console.error('Fetch error:', error);
-        alert('Gagal mengirim data: ' + error.message);
-      }
-    }
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set max date to today
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('tanggal').max = today;
+      document.getElementById('tanggal').value = today;
       
-      // Add debounce to search input
+      // Add initial barang item
+      tambahBarang();
+      
+      // Load data
+      fetchData();
+      
+      // Setup event listeners
       document.getElementById('searchInput').addEventListener('input', function() {
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(applyFilters, 500);
@@ -762,6 +752,7 @@ try {
         alert("Data berhasil dikirim!");
         fetchData();
         // Reset form
+        const today = new Date().toISOString().split('T')[0];
         document.getElementById("tanggal").value = today;
         document.getElementById("noSurat").value = "";
         document.getElementById("pemohon").value = "";
@@ -779,7 +770,6 @@ try {
         button.disabled = false;
       });
     }
-
     // Fungsi untuk memperbarui status realisasi
     function updateRealisasi(id, status) {
       if (!confirm(`Apakah Anda yakin ingin mengubah status realisasi menjadi '${status}'?`)) {
